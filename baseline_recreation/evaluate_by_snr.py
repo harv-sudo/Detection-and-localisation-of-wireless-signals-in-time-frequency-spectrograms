@@ -1,17 +1,15 @@
 from collections import defaultdict
-from pathlib import Path
 import time
 
 import numpy as np
-import scipy.io
 import torch
 from torch.utils.data import DataLoader, random_split
 
-from dataset import SignalAreaDataset
+from dataset_large import LargeSignalAreaDataset
 from model import DLANNBaseline
 
 
-DATA_DIR = "data/raw"
+DATA_DIR = "data/raw_large"
 CHECKPOINT_PATH = "checkpoints/best_model.pt"
 
 BATCH_SIZE = 25
@@ -75,9 +73,9 @@ def mse_score(pred_boxes, true_boxes):
 
 def evaluate_by_snr():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Using device: {device}")
+    print(f"Using device: {device}", flush=True)
 
-    dataset = SignalAreaDataset(DATA_DIR)
+    dataset = LargeSignalAreaDataset(DATA_DIR)
 
     n_total = len(dataset)
     n_train = int(TRAIN_SPLIT * n_total)
@@ -90,7 +88,13 @@ def evaluate_by_snr():
         generator=torch.Generator().manual_seed(SEED),
     )
 
-    test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE, shuffle=False)
+    test_loader = DataLoader(
+        test_ds,
+        batch_size=BATCH_SIZE,
+        shuffle=False,
+        num_workers=4,
+        pin_memory=torch.cuda.is_available(),
+    )
 
     model = DLANNBaseline().to(device)
     checkpoint = torch.load(CHECKPOINT_PATH, map_location=device)
@@ -100,11 +104,8 @@ def evaluate_by_snr():
     results = defaultdict(lambda: {"f1": [], "iou": [], "mse": [], "time": []})
 
     with torch.no_grad():
-        for batch_indices, (x, y) in zip(
-            [test_ds.indices[i:i + BATCH_SIZE] for i in range(0, len(test_ds.indices), BATCH_SIZE)],
-            test_loader
-        ):
-            x = x.to(device)
+        for x, y, snr_batch in test_loader:
+            x = x.to(device, non_blocking=True)
 
             start = time.perf_counter()
             preds = model(x)
@@ -114,14 +115,10 @@ def evaluate_by_snr():
 
             preds = preds.cpu().numpy().reshape(-1, MAX_BOXES, 4)
             targets = y.numpy().reshape(-1, MAX_BOXES, 4)
+            snr_batch = snr_batch.numpy()
 
-            for local_i, original_idx in enumerate(batch_indices):
-                mat_path = dataset.files[original_idx]
-                mat = scipy.io.loadmat(mat_path)
-                snr = int(mat["SNR_dB"].item())
-
-                pred_boxes = preds[local_i]
-                true_boxes = targets[local_i]
+            for pred_boxes, true_boxes, snr_value in zip(preds, targets, snr_batch):
+                snr = int(round(float(snr_value)))
 
                 pred_mask = boxes_to_mask(pred_boxes)
                 true_mask = boxes_to_mask(true_boxes)
@@ -131,9 +128,9 @@ def evaluate_by_snr():
                 results[snr]["mse"].append(mse_score(pred_boxes, true_boxes))
                 results[snr]["time"].append(per_sample_time)
 
-    print("SNR-wise evaluation")
-    print("-------------------")
-    print("SNR_dB\tF1\tIoU\tMSE\tTime_ms")
+    print("SNR-wise evaluation", flush=True)
+    print("-------------------", flush=True)
+    print("SNR_dB\tF1\tIoU\tMSE\tTime_ms", flush=True)
 
     for snr in sorted(results.keys()):
         f1 = np.mean(results[snr]["f1"])
@@ -141,7 +138,7 @@ def evaluate_by_snr():
         mse = np.mean(results[snr]["mse"])
         t = np.mean(results[snr]["time"]) * 1000
 
-        print(f"{snr:>+3d}\t{f1:.4f}\t{iou:.4f}\t{mse:.6f}\t{t:.4f}")
+        print(f"{snr:>+3d}\t{f1:.4f}\t{iou:.4f}\t{mse:.6f}\t{t:.4f}", flush=True)
 
 
 if __name__ == "__main__":

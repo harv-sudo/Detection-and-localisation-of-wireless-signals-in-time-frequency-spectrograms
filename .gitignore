@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Large generated datasets
+baseline_recreation/data/raw_large/
+baseline_recreation/data/raw_small/
+baseline_recreation/data/raw/
+*.mat
+
+# Training outputs
+baseline_recreation/checkpoints/
+baseline_recreation/logs/
+baseline_recreation/outputs/
+*.pt
+*.pth
+*.ckpt
+
+# OS clutter
+.DS_Store
+Thumbs.db

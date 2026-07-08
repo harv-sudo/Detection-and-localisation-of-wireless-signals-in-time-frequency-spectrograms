@@ -4,12 +4,11 @@ import time
 import numpy as np
 import torch
 from torch.utils.data import DataLoader, random_split
-
-from dataset import SignalAreaDataset
+from dataset_large import LargeSignalAreaDataset
 from model import DLANNBaseline
 
 
-DATA_DIR = "data/raw"
+DATA_DIR = "data/raw_large"
 CHECKPOINT_PATH = "checkpoints/best_model.pt"
 
 BATCH_SIZE = 25
@@ -75,7 +74,7 @@ def evaluate():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-    dataset = SignalAreaDataset(DATA_DIR)
+    dataset = LargeSignalAreaDataset(DATA_DIR)
 
     n_total = len(dataset)
     n_train = int(TRAIN_SPLIT * n_total)
