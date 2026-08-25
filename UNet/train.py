@@ -16,7 +16,7 @@ from model import UNet
 # =========================================================
 
 # Fresh dataset generated locally using MATLAB
-DATA_DIR = "../data/unet_local"
+DATA_DIR = "data"
 
 CHECKPOINT_DIR = "checkpoints"
 

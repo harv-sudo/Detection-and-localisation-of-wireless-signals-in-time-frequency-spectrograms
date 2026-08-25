@@ -13,7 +13,7 @@ from model import UNet
 # Configuration
 # =========================================================
 
-DATA_DIR = "../baseline_recreation/data/raw_large"
+DATA_DIR = "data"
 CHECKPOINT_PATH = "checkpoints/best_model.pt"
 
 BATCH_SIZE = 128
