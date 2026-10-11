@@ -1,0 +1,125 @@
+{
+  "device": "cpu",
+  "device_name": "CPU",
+  "torch_version": "2.12.0+rocm7.14.0",
+  "dtype": "float32",
+  "cpu_threads": 4,
+  "batch_size": 1,
+  "input_shape": [
+    1,
+    1,
+    50,
+    100
+  ],
+  "warmup_per_round": 30,
+  "iterations_per_round": 100,
+  "rounds": 3,
+  "trained_weights": true,
+  "run_directories": {
+    "fast": "runs/fast_unet_b8_seed42",
+    "unet": "runs/unet_bn_native_seed42",
+    "evidence": "runs/evidence_axial_seed42"
+  },
+  "native_batchnorm_only": false,
+  "records": [
+    {
+      "model": "unet",
+      "parameters": 1926433,
+      "convolution_macs_per_image": 685554176,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 3.8688500062562525
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 3.746700007468462
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 3.6574000114342198
+        }
+      ],
+      "median_batch_ms": 3.746700007468462,
+      "p95_batch_ms": 4.267999989679083,
+      "mean_batch_ms": 3.740324332805661,
+      "amortized_mean_ms_per_image": 3.740324332805661
+    },
+    {
+      "model": "unet_folded",
+      "parameters": 1925025,
+      "convolution_macs_per_image": 685554176,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 3.862049983581528
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 3.787549998378381
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 3.718349995324388
+        }
+      ],
+      "median_batch_ms": 3.789350012084469,
+      "p95_batch_ms": 4.301599983591586,
+      "mean_batch_ms": 3.7751959994784556,
+      "amortized_mean_ms_per_image": 3.7751959994784556
+    },
+    {
+      "model": "evidence_axial",
+      "parameters": 37347,
+      "convolution_macs_per_image": 38810400,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 3.1143999949563295
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 2.9311499965842813
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 2.9610499914269894
+        }
+      ],
+      "median_batch_ms": 3.0009999900357798,
+      "p95_batch_ms": 3.697599982842803,
+      "mean_batch_ms": 3.0462663330642195,
+      "amortized_mean_ms_per_image": 3.0462663330642195
+    },
+    {
+      "model": "fast_unet_b8_deploy",
+      "parameters": 120681,
+      "convolution_macs_per_image": 43147136,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 1.2376500089885667
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 1.213150011608377
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 1.2403000000631437
+        }
+      ],
+      "median_batch_ms": 1.2312500039115548,
+      "p95_batch_ms": 1.6917999892029911,
+      "mean_batch_ms": 1.2907680015390117,
+      "amortized_mean_ms_per_image": 1.2907680015390117
+    }
+  ],
+  "memory_format": "contiguous",
+  "optimize_cpu": true,
+  "limitations": [
+    "Synchronized host-wall model forward; excludes loading, transfers and decoding.",
+    "Same FP32 policy; CPU inference graph optimization only when requested, for every model.",
+    "Convolution MACs exclude other operations and memory traffic."
+  ]
+}

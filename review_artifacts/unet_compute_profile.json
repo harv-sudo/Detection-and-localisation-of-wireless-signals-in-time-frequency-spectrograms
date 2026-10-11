@@ -1,0 +1,597 @@
+{
+  "torch_version": "2.12.0+rocm7.14.0",
+  "device": "cpu",
+  "input_shape": [
+    1,
+    1,
+    50,
+    100
+  ],
+  "method": "Analytical convolution multiply-accumulate counts from forward hooks",
+  "limitations": [
+    "No accuracy or latency measurements; width variants are untrained.",
+    "Excludes batch normalization, activation, pooling, interpolation, bias additions and memory traffic.",
+    "One multiply-accumulate is counted as one MAC, not two floating-point operations."
+  ],
+  "variants": [
+    {
+      "base_width": 32,
+      "trainable_parameters": 1926433,
+      "convolution_macs": 685554176,
+      "output_shape": [
+        1,
+        1,
+        50,
+        100
+      ],
+      "layers": [
+        {
+          "name": "enc1.block.0",
+          "output_shape": [
+            1,
+            32,
+            50,
+            100
+          ],
+          "macs": 1440000
+        },
+        {
+          "name": "enc1.block.3",
+          "output_shape": [
+            1,
+            32,
+            50,
+            100
+          ],
+          "macs": 46080000
+        },
+        {
+          "name": "enc2.block.1.block.0",
+          "output_shape": [
+            1,
+            64,
+            25,
+            50
+          ],
+          "macs": 23040000
+        },
+        {
+          "name": "enc2.block.1.block.3",
+          "output_shape": [
+            1,
+            64,
+            25,
+            50
+          ],
+          "macs": 46080000
+        },
+        {
+          "name": "enc3.block.1.block.0",
+          "output_shape": [
+            1,
+            128,
+            12,
+            25
+          ],
+          "macs": 22118400
+        },
+        {
+          "name": "enc3.block.1.block.3",
+          "output_shape": [
+            1,
+            128,
+            12,
+            25
+          ],
+          "macs": 44236800
+        },
+        {
+          "name": "bottleneck.block.1.block.0",
+          "output_shape": [
+            1,
+            256,
+            6,
+            12
+          ],
+          "macs": 21233664
+        },
+        {
+          "name": "bottleneck.block.1.block.3",
+          "output_shape": [
+            1,
+            256,
+            6,
+            12
+          ],
+          "macs": 42467328
+        },
+        {
+          "name": "dec3.up",
+          "output_shape": [
+            1,
+            128,
+            12,
+            24
+          ],
+          "macs": 9437184
+        },
+        {
+          "name": "dec3.conv.block.0",
+          "output_shape": [
+            1,
+            128,
+            12,
+            25
+          ],
+          "macs": 88473600
+        },
+        {
+          "name": "dec3.conv.block.3",
+          "output_shape": [
+            1,
+            128,
+            12,
+            25
+          ],
+          "macs": 44236800
+        },
+        {
+          "name": "dec2.up",
+          "output_shape": [
+            1,
+            64,
+            24,
+            50
+          ],
+          "macs": 9830400
+        },
+        {
+          "name": "dec2.conv.block.0",
+          "output_shape": [
+            1,
+            64,
+            25,
+            50
+          ],
+          "macs": 92160000
+        },
+        {
+          "name": "dec2.conv.block.3",
+          "output_shape": [
+            1,
+            64,
+            25,
+            50
+          ],
+          "macs": 46080000
+        },
+        {
+          "name": "dec1.up",
+          "output_shape": [
+            1,
+            32,
+            50,
+            100
+          ],
+          "macs": 10240000
+        },
+        {
+          "name": "dec1.conv.block.0",
+          "output_shape": [
+            1,
+            32,
+            50,
+            100
+          ],
+          "macs": 92160000
+        },
+        {
+          "name": "dec1.conv.block.3",
+          "output_shape": [
+            1,
+            32,
+            50,
+            100
+          ],
+          "macs": 46080000
+        },
+        {
+          "name": "output",
+          "output_shape": [
+            1,
+            1,
+            50,
+            100
+          ],
+          "macs": 160000
+        }
+      ]
+    },
+    {
+      "base_width": 16,
+      "trainable_parameters": 482449,
+      "convolution_macs": 171788544,
+      "output_shape": [
+        1,
+        1,
+        50,
+        100
+      ],
+      "layers": [
+        {
+          "name": "enc1.block.0",
+          "output_shape": [
+            1,
+            16,
+            50,
+            100
+          ],
+          "macs": 720000
+        },
+        {
+          "name": "enc1.block.3",
+          "output_shape": [
+            1,
+            16,
+            50,
+            100
+          ],
+          "macs": 11520000
+        },
+        {
+          "name": "enc2.block.1.block.0",
+          "output_shape": [
+            1,
+            32,
+            25,
+            50
+          ],
+          "macs": 5760000
+        },
+        {
+          "name": "enc2.block.1.block.3",
+          "output_shape": [
+            1,
+            32,
+            25,
+            50
+          ],
+          "macs": 11520000
+        },
+        {
+          "name": "enc3.block.1.block.0",
+          "output_shape": [
+            1,
+            64,
+            12,
+            25
+          ],
+          "macs": 5529600
+        },
+        {
+          "name": "enc3.block.1.block.3",
+          "output_shape": [
+            1,
+            64,
+            12,
+            25
+          ],
+          "macs": 11059200
+        },
+        {
+          "name": "bottleneck.block.1.block.0",
+          "output_shape": [
+            1,
+            128,
+            6,
+            12
+          ],
+          "macs": 5308416
+        },
+        {
+          "name": "bottleneck.block.1.block.3",
+          "output_shape": [
+            1,
+            128,
+            6,
+            12
+          ],
+          "macs": 10616832
+        },
+        {
+          "name": "dec3.up",
+          "output_shape": [
+            1,
+            64,
+            12,
+            24
+          ],
+          "macs": 2359296
+        },
+        {
+          "name": "dec3.conv.block.0",
+          "output_shape": [
+            1,
+            64,
+            12,
+            25
+          ],
+          "macs": 22118400
+        },
+        {
+          "name": "dec3.conv.block.3",
+          "output_shape": [
+            1,
+            64,
+            12,
+            25
+          ],
+          "macs": 11059200
+        },
+        {
+          "name": "dec2.up",
+          "output_shape": [
+            1,
+            32,
+            24,
+            50
+          ],
+          "macs": 2457600
+        },
+        {
+          "name": "dec2.conv.block.0",
+          "output_shape": [
+            1,
+            32,
+            25,
+            50
+          ],
+          "macs": 23040000
+        },
+        {
+          "name": "dec2.conv.block.3",
+          "output_shape": [
+            1,
+            32,
+            25,
+            50
+          ],
+          "macs": 11520000
+        },
+        {
+          "name": "dec1.up",
+          "output_shape": [
+            1,
+            16,
+            50,
+            100
+          ],
+          "macs": 2560000
+        },
+        {
+          "name": "dec1.conv.block.0",
+          "output_shape": [
+            1,
+            16,
+            50,
+            100
+          ],
+          "macs": 23040000
+        },
+        {
+          "name": "dec1.conv.block.3",
+          "output_shape": [
+            1,
+            16,
+            50,
+            100
+          ],
+          "macs": 11520000
+        },
+        {
+          "name": "output",
+          "output_shape": [
+            1,
+            1,
+            50,
+            100
+          ],
+          "macs": 80000
+        }
+      ]
+    },
+    {
+      "base_width": 8,
+      "trainable_parameters": 121033,
+      "convolution_macs": 43147136,
+      "output_shape": [
+        1,
+        1,
+        50,
+        100
+      ],
+      "layers": [
+        {
+          "name": "enc1.block.0",
+          "output_shape": [
+            1,
+            8,
+            50,
+            100
+          ],
+          "macs": 360000
+        },
+        {
+          "name": "enc1.block.3",
+          "output_shape": [
+            1,
+            8,
+            50,
+            100
+          ],
+          "macs": 2880000
+        },
+        {
+          "name": "enc2.block.1.block.0",
+          "output_shape": [
+            1,
+            16,
+            25,
+            50
+          ],
+          "macs": 1440000
+        },
+        {
+          "name": "enc2.block.1.block.3",
+          "output_shape": [
+            1,
+            16,
+            25,
+            50
+          ],
+          "macs": 2880000
+        },
+        {
+          "name": "enc3.block.1.block.0",
+          "output_shape": [
+            1,
+            32,
+            12,
+            25
+          ],
+          "macs": 1382400
+        },
+        {
+          "name": "enc3.block.1.block.3",
+          "output_shape": [
+            1,
+            32,
+            12,
+            25
+          ],
+          "macs": 2764800
+        },
+        {
+          "name": "bottleneck.block.1.block.0",
+          "output_shape": [
+            1,
+            64,
+            6,
+            12
+          ],
+          "macs": 1327104
+        },
+        {
+          "name": "bottleneck.block.1.block.3",
+          "output_shape": [
+            1,
+            64,
+            6,
+            12
+          ],
+          "macs": 2654208
+        },
+        {
+          "name": "dec3.up",
+          "output_shape": [
+            1,
+            32,
+            12,
+            24
+          ],
+          "macs": 589824
+        },
+        {
+          "name": "dec3.conv.block.0",
+          "output_shape": [
+            1,
+            32,
+            12,
+            25
+          ],
+          "macs": 5529600
+        },
+        {
+          "name": "dec3.conv.block.3",
+          "output_shape": [
+            1,
+            32,
+            12,
+            25
+          ],
+          "macs": 2764800
+        },
+        {
+          "name": "dec2.up",
+          "output_shape": [
+            1,
+            16,
+            24,
+            50
+          ],
+          "macs": 614400
+        },
+        {
+          "name": "dec2.conv.block.0",
+          "output_shape": [
+            1,
+            16,
+            25,
+            50
+          ],
+          "macs": 5760000
+        },
+        {
+          "name": "dec2.conv.block.3",
+          "output_shape": [
+            1,
+            16,
+            25,
+            50
+          ],
+          "macs": 2880000
+        },
+        {
+          "name": "dec1.up",
+          "output_shape": [
+            1,
+            8,
+            50,
+            100
+          ],
+          "macs": 640000
+        },
+        {
+          "name": "dec1.conv.block.0",
+          "output_shape": [
+            1,
+            8,
+            50,
+            100
+          ],
+          "macs": 5760000
+        },
+        {
+          "name": "dec1.conv.block.3",
+          "output_shape": [
+            1,
+            8,
+            50,
+            100
+          ],
+          "macs": 2880000
+        },
+        {
+          "name": "output",
+          "output_shape": [
+            1,
+            1,
+            50,
+            100
+          ],
+          "macs": 40000
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "device": "cpu",
+  "device_name": "CPU",
+  "torch_version": "2.12.0+rocm7.14.0",
+  "dtype": "float32",
+  "cpu_threads": 4,
+  "batch_size": 1,
+  "input_shape": [
+    1,
+    1,
+    50,
+    100
+  ],
+  "warmup_per_round": 10,
+  "iterations_per_round": 40,
+  "rounds": 2,
+  "trained_weights": false,
+  "run_directories": {
+    "fast": null,
+    "unet": "runs/unet_bn_native_seed42",
+    "evidence": "runs/evidence_axial_seed42"
+  },
+  "native_batchnorm_only": false,
+  "records": [
+    {
+      "model": "unet",
+      "parameters": 1926433,
+      "convolution_macs_per_image": 685554176,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 10.305100004188716
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 10.204399994108826
+        }
+      ],
+      "median_batch_ms": 10.249899991322309,
+      "p95_batch_ms": 11.31049997638911,
+      "mean_batch_ms": 10.444118749364861,
+      "amortized_mean_ms_per_image": 10.444118749364861
+    },
+    {
+      "model": "unet_folded",
+      "parameters": 1925025,
+      "convolution_macs_per_image": 685554176,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 10.102100000949576
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 10.23644999077078
+        }
+      ],
+      "median_batch_ms": 10.103500011609867,
+      "p95_batch_ms": 11.2407999986317,
+      "mean_batch_ms": 10.363073751068441,
+      "amortized_mean_ms_per_image": 10.363073751068441
+    },
+    {
+      "model": "evidence_axial",
+      "parameters": 37347,
+      "convolution_macs_per_image": 38810400,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 1.770799994119443
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 1.775099997757934
+        }
+      ],
+      "median_batch_ms": 1.7740999901434407,
+      "p95_batch_ms": 1.8041000002995133,
+      "mean_batch_ms": 1.7889699985971674,
+      "amortized_mean_ms_per_image": 1.7889699985971674
+    },
+    {
+      "model": "fast_unet_b8_deploy",
+      "parameters": 120681,
+      "convolution_macs_per_image": 43147136,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 67.03315001504961
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 67.2799500025576
+        }
+      ],
+      "median_batch_ms": 67.26845000230242,
+      "p95_batch_ms": 145.17980001983233,
+      "mean_batch_ms": 72.4757887499436,
+      "amortized_mean_ms_per_image": 72.4757887499436
+    },
+    {
+      "model": "fast_unet_b12_deploy",
+      "parameters": 271165,
+      "convolution_macs_per_image": 96781056,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 4.002850007964298
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 3.983000002335757
+        }
+      ],
+      "median_batch_ms": 3.9860499964561313,
+      "p95_batch_ms": 4.399299999931827,
+      "mean_batch_ms": 4.017762500006938,
+      "amortized_mean_ms_per_image": 4.017762500006938
+    },
+    {
+      "model": "fast_unet_b16_deploy",
+      "parameters": 481745,
+      "convolution_macs_per_image": 171788544,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 35.4018000070937
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 33.22370001114905
+        }
+      ],
+      "median_batch_ms": 34.95819999079686,
+      "p95_batch_ms": 59.6864000253845,
+      "mean_batch_ms": 32.88826125135529,
+      "amortized_mean_ms_per_image": 32.88826125135529
+    }
+  ],
+  "limitations": [
+    "Synchronized host-wall model forward; excludes loading, transfers and decoding.",
+    "Same FP32 policy; no compile, graph capture or quantization.",
+    "Convolution MACs exclude other operations and memory traffic."
+  ]
+}

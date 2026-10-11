@@ -1,0 +1,798 @@
+{
+  "scope": "Synthetic distribution sanity check; no saved data or checkpoints loaded.",
+  "seed": 42,
+  "simulated_scenes": 100000,
+  "generator_config": {
+    "height": 50,
+    "width": 100,
+    "active_columns_matlab_inclusive": [
+      35,
+      65
+    ],
+    "min_on": 10,
+    "min_off": 5,
+    "lambda_on": 0.5,
+    "lambda_off": 0.5,
+    "Pfa": 0.01,
+    "N": 100
+  },
+  "estimated_active_channel_occupancy": 0.6425286,
+  "always_predict_full_active_channel": {
+    "micro_f1": 0.7823651898664048,
+    "macro_f1": 0.7803522582677388,
+    "micro_and_macro_iou": 0.6425286
+  },
+  "clean_template_overlap": {
+    "unique_templates": 17424,
+    "largest_template_count": 190,
+    "fraction_beyond_first_occurrence": 0.82576,
+    "test_template_seen_in_train_fraction": 0.89525,
+    "caveat": "Clean-template overlap only; noisy observations have independent flips."
+  },
+  "all_empty_scenes": 0,
+  "row_count_baselines": [
+    {
+      "rule": "Mark row busy iff at least 1 of 31 active-channel pixels are one.",
+      "threshold": 1,
+      "analytic_false_positive_rate_within_active_channel": 0.2676966303456023,
+      "by_snr": [
+        {
+          "snr_db": -20,
+          "generator_Pd": 0.013751456900573255,
+          "analytic_recall": 0.34900505715888386,
+          "analytic_micro_f1": 0.4659805406781791,
+          "analytic_micro_iou": 0.30376442609416826
+        },
+        {
+          "snr_db": -19,
+          "generator_Pd": 0.014886484116018258,
+          "analytic_recall": 0.37183373654876434,
+          "analytic_micro_f1": 0.489008156433384,
+          "analytic_micro_iou": 0.32363388228430556
+        },
+        {
+          "snr_db": -18,
+          "generator_Pd": 0.016419902377266683,
+          "analytic_recall": 0.40144825203776097,
+          "analytic_micro_f1": 0.5178702723385137,
+          "analytic_micro_iou": 0.34940954403202795
+        },
+        {
+          "snr_db": -17,
+          "generator_Pd": 0.0185248440437662,
+          "analytic_recall": 0.4399089477346072,
+          "analytic_micro_f1": 0.5537478060499813,
+          "analytic_micro_iou": 0.38288467831988526
+        },
+        {
+          "snr_db": -16,
+          "generator_Pd": 0.02146908941319098,
+          "analytic_recall": 0.4897170939016199,
+          "analytic_micro_f1": 0.5977078490221565,
+          "analytic_micro_iou": 0.42623632215680873
+        },
+        {
+          "snr_db": -15,
+          "generator_Pd": 0.02567740119463332,
+          "analytic_recall": 0.5535364054089262,
+          "analytic_micro_f1": 0.6502746116451242,
+          "analytic_micro_iou": 0.48178289988137274
+        },
+        {
+          "snr_db": -14,
+          "generator_Pd": 0.03183989748265226,
+          "analytic_recall": 0.6332563281575032,
+          "analytic_micro_f1": 0.7106497835401496,
+          "analytic_micro_iou": 0.5511689333650326
+        },
+        {
+          "snr_db": -13,
+          "generator_Pd": 0.0411008515440842,
+          "analytic_recall": 0.7277543673075701,
+          "analytic_micro_f1": 0.7755732499877728,
+          "analytic_micro_iou": 0.6334174338971506
+        },
+        {
+          "snr_db": -12,
+          "generator_Pd": 0.05538211831992065,
+          "analytic_recall": 0.8290216826227781,
+          "analytic_micro_f1": 0.8382614367145526,
+          "analytic_micro_iou": 0.7215577266746768
+        },
+        {
+          "snr_db": -11,
+          "generator_Pd": 0.0779084003896991,
+          "analytic_recall": 0.9190911492897226,
+          "analytic_micro_f1": 0.8888590851415066,
+          "analytic_micro_iou": 0.7999517192242938
+        },
+        {
+          "snr_db": -10,
+          "generator_Pd": 0.11395293971271368,
+          "analytic_recall": 0.9764949889528821,
+          "analytic_micro_f1": 0.9188689217358491,
+          "analytic_micro_iou": 0.8499144462771085
+        },
+        {
+          "snr_db": -9,
+          "generator_Pd": 0.17154747024761374,
+          "analytic_recall": 0.9970738506977048,
+          "analytic_micro_f1": 0.9292362903770832,
+          "analytic_micro_iou": 0.8678257229172677
+        },
+        {
+          "snr_db": -8,
+          "generator_Pd": 0.26108026216771163,
+          "analytic_recall": 0.9999155664029111,
+          "analytic_micro_f1": 0.9306523071719225,
+          "analytic_micro_iou": 0.8702990742988833
+        },
+        {
+          "snr_db": -7,
+          "generator_Pd": 0.39126880847629475,
+          "analytic_recall": 0.9999997924167888,
+          "analytic_micro_f1": 0.9306942195492536,
+          "analytic_micro_iou": 0.870372382310452
+        },
+        {
+          "snr_db": -6,
+          "generator_Pd": 0.558942981424775,
+          "analytic_recall": 0.9999999999904647,
+          "analytic_micro_f1": 0.9306943228375846,
+          "analytic_micro_iou": 0.8703725629768844
+        },
+        {
+          "snr_db": -5,
+          "generator_Pd": 0.7373167990830709,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9306943228423293,
+          "analytic_micro_iou": 0.8703725629851836
+        },
+        {
+          "snr_db": -4,
+          "generator_Pd": 0.8817035414250374,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9306943228423293,
+          "analytic_micro_iou": 0.8703725629851836
+        },
+        {
+          "snr_db": -3,
+          "generator_Pd": 0.963187254768155,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9306943228423293,
+          "analytic_micro_iou": 0.8703725629851836
+        },
+        {
+          "snr_db": -2,
+          "generator_Pd": 0.9927022303481439,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9306943228423293,
+          "analytic_micro_iou": 0.8703725629851836
+        },
+        {
+          "snr_db": -1,
+          "generator_Pd": 0.999127107152406,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9306943228423293,
+          "analytic_micro_iou": 0.8703725629851836
+        },
+        {
+          "snr_db": 0,
+          "generator_Pd": 0.9999376826595625,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9306943228423293,
+          "analytic_micro_iou": 0.8703725629851836
+        },
+        {
+          "snr_db": 1,
+          "generator_Pd": 0.9999972305777818,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9306943228423293,
+          "analytic_micro_iou": 0.8703725629851836
+        },
+        {
+          "snr_db": 2,
+          "generator_Pd": 0.99999991587987,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9306943228423293,
+          "analytic_micro_iou": 0.8703725629851836
+        },
+        {
+          "snr_db": 3,
+          "generator_Pd": 0.9999999980063385,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9306943228423293,
+          "analytic_micro_iou": 0.8703725629851836
+        },
+        {
+          "snr_db": 4,
+          "generator_Pd": 0.9999999999571121,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9306943228423293,
+          "analytic_micro_iou": 0.8703725629851836
+        },
+        {
+          "snr_db": 5,
+          "generator_Pd": 0.9999999999990288,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9306943228423293,
+          "analytic_micro_iou": 0.8703725629851836
+        }
+      ]
+    },
+    {
+      "rule": "Mark row busy iff at least 2 of 31 active-channel pixels are one.",
+      "threshold": 2,
+      "analytic_false_positive_rate_within_active_channel": 0.03838951459523544,
+      "by_snr": [
+        {
+          "snr_db": -20,
+          "generator_Pd": 0.013751456900573255,
+          "analytic_recall": 0.06761960132240645,
+          "analytic_micro_f1": 0.12418914505571586,
+          "analytic_micro_iou": 0.06620557969817514
+        },
+        {
+          "snr_db": -19,
+          "generator_Pd": 0.014886484116018258,
+          "analytic_recall": 0.07756632926878244,
+          "analytic_micro_f1": 0.14116772949904716,
+          "analytic_micro_iou": 0.07594430747697457
+        },
+        {
+          "snr_db": -18,
+          "generator_Pd": 0.016419902377266683,
+          "analytic_recall": 0.09168903661226382,
+          "analytic_micro_f1": 0.16475320457512477,
+          "analytic_micro_iou": 0.08977168900980591
+        },
+        {
+          "snr_db": -17,
+          "generator_Pd": 0.0185248440437662,
+          "analytic_recall": 0.11219450764171165,
+          "analytic_micro_f1": 0.1979520183143377,
+          "analytic_micro_iou": 0.10984836160087726
+        },
+        {
+          "snr_db": -16,
+          "generator_Pd": 0.02146908941319098,
+          "analytic_recall": 0.14265131828410926,
+          "analytic_micro_f1": 0.24510338665192005,
+          "analytic_micro_iou": 0.13966827720084288
+        },
+        {
+          "snr_db": -15,
+          "generator_Pd": 0.02567740119463332,
+          "analytic_recall": 0.18878578750655065,
+          "analytic_micro_f1": 0.3120055364211102,
+          "analytic_micro_iou": 0.18483800933777664
+        },
+        {
+          "snr_db": -14,
+          "generator_Pd": 0.03183989748265226,
+          "analytic_recall": 0.2593620648130921,
+          "analytic_micro_f1": 0.40502536535794803,
+          "analytic_micro_iou": 0.25393843673811456
+        },
+        {
+          "snr_db": -13,
+          "generator_Pd": 0.0411008515440842,
+          "analytic_recall": 0.3660110621060944,
+          "analytic_micro_f1": 0.5276332891287904,
+          "analytic_micro_iou": 0.35835725246503713
+        },
+        {
+          "snr_db": -12,
+          "generator_Pd": 0.05538211831992065,
+          "analytic_recall": 0.5182681078811893,
+          "analytic_micro_f1": 0.6732388996550255,
+          "analytic_micro_iou": 0.5074303877917244
+        },
+        {
+          "snr_db": -11,
+          "generator_Pd": 0.0779084003896991,
+          "analytic_recall": 0.7071730998193709,
+          "analytic_micro_f1": 0.8182358793115138,
+          "analytic_micro_iou": 0.6923851088276536
+        },
+        {
+          "snr_db": -10,
+          "generator_Pd": 0.11395293971271368,
+          "analytic_recall": 0.8827839187035855,
+          "analytic_micro_f1": 0.9272248985788661,
+          "analytic_micro_iou": 0.8643236567949296
+        },
+        {
+          "snr_db": -9,
+          "generator_Pd": 0.17154747024761374,
+          "analytic_recall": 0.9782904222418908,
+          "analytic_micro_f1": 0.9784624039683412,
+          "analytic_micro_iou": 0.9578329840911866
+        },
+        {
+          "snr_db": -8,
+          "generator_Pd": 0.26108026216771163,
+          "analytic_recall": 0.9989907537600932,
+          "analytic_micro_f1": 0.9889289961375218,
+          "analytic_micro_iou": 0.9781004423622379
+        },
+        {
+          "snr_db": -7,
+          "generator_Pd": 0.39126880847629475,
+          "analytic_recall": 0.9999956561971555,
+          "analytic_micro_f1": 0.989431643307179,
+          "analytic_micro_iou": 0.9790843308662325
+        },
+        {
+          "snr_db": -6,
+          "generator_Pd": 0.558942981424775,
+          "analytic_recall": 0.9999999996158616,
+          "analytic_micro_f1": 0.98943381477874,
+          "analytic_micro_iou": 0.9790885834579025
+        },
+        {
+          "snr_db": -5,
+          "generator_Pd": 0.7373167990830709,
+          "analytic_recall": 0.9999999999999999,
+          "analytic_micro_f1": 0.9894338149707878,
+          "analytic_micro_iou": 0.9790885838340079
+        },
+        {
+          "snr_db": -4,
+          "generator_Pd": 0.8817035414250374,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9894338149707878,
+          "analytic_micro_iou": 0.9790885838340081
+        },
+        {
+          "snr_db": -3,
+          "generator_Pd": 0.963187254768155,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9894338149707878,
+          "analytic_micro_iou": 0.9790885838340081
+        },
+        {
+          "snr_db": -2,
+          "generator_Pd": 0.9927022303481439,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9894338149707878,
+          "analytic_micro_iou": 0.9790885838340081
+        },
+        {
+          "snr_db": -1,
+          "generator_Pd": 0.999127107152406,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9894338149707878,
+          "analytic_micro_iou": 0.9790885838340081
+        },
+        {
+          "snr_db": 0,
+          "generator_Pd": 0.9999376826595625,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9894338149707878,
+          "analytic_micro_iou": 0.9790885838340081
+        },
+        {
+          "snr_db": 1,
+          "generator_Pd": 0.9999972305777818,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9894338149707878,
+          "analytic_micro_iou": 0.9790885838340081
+        },
+        {
+          "snr_db": 2,
+          "generator_Pd": 0.99999991587987,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9894338149707878,
+          "analytic_micro_iou": 0.9790885838340081
+        },
+        {
+          "snr_db": 3,
+          "generator_Pd": 0.9999999980063385,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9894338149707878,
+          "analytic_micro_iou": 0.9790885838340081
+        },
+        {
+          "snr_db": 4,
+          "generator_Pd": 0.9999999999571121,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9894338149707878,
+          "analytic_micro_iou": 0.9790885838340081
+        },
+        {
+          "snr_db": 5,
+          "generator_Pd": 0.9999999999990288,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9894338149707878,
+          "analytic_micro_iou": 0.9790885838340081
+        }
+      ]
+    },
+    {
+      "rule": "Mark row busy iff at least 4 of 31 active-channel pixels are one.",
+      "threshold": 4,
+      "analytic_false_positive_rate_within_active_channel": 0.00025354901283588936,
+      "by_snr": [
+        {
+          "snr_db": -20,
+          "generator_Pd": 0.013751456900573255,
+          "analytic_recall": 0.0008362000220717612,
+          "analytic_micro_f1": 0.0016707672663531933,
+          "analytic_micro_iou": 0.0008360820824642794
+        },
+        {
+          "snr_db": -19,
+          "generator_Pd": 0.014886484116018258,
+          "analytic_recall": 0.0011206090303023158,
+          "analytic_micro_f1": 0.002238393943285197,
+          "analytic_micro_iou": 0.0011204509769829117
+        },
+        {
+          "snr_db": -18,
+          "generator_Pd": 0.016419902377266683,
+          "analytic_recall": 0.0016047610436131033,
+          "analytic_micro_f1": 0.0032039285941025124,
+          "analytic_micro_iou": 0.0016045347043610225
+        },
+        {
+          "snr_db": -17,
+          "generator_Pd": 0.0185248440437662,
+          "analytic_recall": 0.002484530097575477,
+          "analytic_micro_f1": 0.004956047634480289,
+          "analytic_micro_iou": 0.0024841796736377233
+        },
+        {
+          "snr_db": -16,
+          "generator_Pd": 0.02146908941319098,
+          "analytic_recall": 0.004206652420946503,
+          "analytic_micro_f1": 0.008376884538212186,
+          "analytic_micro_iou": 0.004206059104847193
+        },
+        {
+          "snr_db": -15,
+          "generator_Pd": 0.02567740119463332,
+          "analytic_recall": 0.0078622829026292,
+          "analytic_micro_f1": 0.015599715894897245,
+          "analytic_micro_iou": 0.007861173987854062
+        },
+        {
+          "snr_db": -14,
+          "generator_Pd": 0.03183989748265226,
+          "analytic_recall": 0.0162818688805732,
+          "analytic_micro_f1": 0.032037586681948595,
+          "analytic_micro_iou": 0.016279572447693316
+        },
+        {
+          "snr_db": -13,
+          "generator_Pd": 0.0411008515440842,
+          "analytic_recall": 0.03706641866923213,
+          "analytic_micro_f1": 0.07147348886628856,
+          "analytic_micro_iou": 0.03706119073482265
+        },
+        {
+          "snr_db": -12,
+          "generator_Pd": 0.05538211831992065,
+          "analytic_recall": 0.09009440057089713,
+          "analytic_micro_f1": 0.16527512385076226,
+          "analytic_micro_iou": 0.09008169344585626
+        },
+        {
+          "snr_db": -11,
+          "generator_Pd": 0.0779084003896991,
+          "analytic_recall": 0.2192362491778977,
+          "analytic_micro_f1": 0.3595872206672539,
+          "analytic_micro_iou": 0.21920532758438976
+        },
+        {
+          "snr_db": -10,
+          "generator_Pd": 0.11395293971271368,
+          "analytic_recall": 0.4772554162714283,
+          "analytic_micro_f1": 0.6460762878679642,
+          "analytic_micro_iou": 0.4771881030509334
+        },
+        {
+          "snr_db": -9,
+          "generator_Pd": 0.17154747024761374,
+          "analytic_recall": 0.8031661298040365,
+          "analytic_micro_f1": 0.8907701731014867,
+          "analytic_micro_iou": 0.8030528493740062
+        },
+        {
+          "snr_db": -8,
+          "generator_Pd": 0.26108026216771163,
+          "analytic_recall": 0.9773485699897377,
+          "analytic_micro_f1": 0.9884740269308224,
+          "analytic_micro_iou": 0.9772107224608274
+        },
+        {
+          "snr_db": -7,
+          "generator_Pd": 0.39126880847629475,
+          "analytic_recall": 0.9997079944973565,
+          "analytic_micro_f1": 0.9997834497876091,
+          "analytic_micro_iou": 0.9995669933429016
+        },
+        {
+          "snr_db": -6,
+          "generator_Pd": 0.558942981424775,
+          "analytic_recall": 0.999999905261139,
+          "analytic_micro_f1": 0.9999294264871843,
+          "analytic_micro_iou": 0.999858862934907
+        },
+        {
+          "snr_db": -5,
+          "generator_Pd": 0.7373167990830709,
+          "analytic_recall": 0.9999999999998963,
+          "analytic_micro_f1": 0.9999294738565649,
+          "analytic_micro_iou": 0.9998589576603022
+        },
+        {
+          "snr_db": -4,
+          "generator_Pd": 0.8817035414250374,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9999294738566168,
+          "analytic_micro_iou": 0.9998589576604059
+        },
+        {
+          "snr_db": -3,
+          "generator_Pd": 0.963187254768155,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9999294738566168,
+          "analytic_micro_iou": 0.9998589576604059
+        },
+        {
+          "snr_db": -2,
+          "generator_Pd": 0.9927022303481439,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9999294738566168,
+          "analytic_micro_iou": 0.9998589576604059
+        },
+        {
+          "snr_db": -1,
+          "generator_Pd": 0.999127107152406,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9999294738566168,
+          "analytic_micro_iou": 0.9998589576604059
+        },
+        {
+          "snr_db": 0,
+          "generator_Pd": 0.9999376826595625,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9999294738566168,
+          "analytic_micro_iou": 0.9998589576604059
+        },
+        {
+          "snr_db": 1,
+          "generator_Pd": 0.9999972305777818,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9999294738566168,
+          "analytic_micro_iou": 0.9998589576604059
+        },
+        {
+          "snr_db": 2,
+          "generator_Pd": 0.99999991587987,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9999294738566168,
+          "analytic_micro_iou": 0.9998589576604059
+        },
+        {
+          "snr_db": 3,
+          "generator_Pd": 0.9999999980063385,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9999294738566168,
+          "analytic_micro_iou": 0.9998589576604059
+        },
+        {
+          "snr_db": 4,
+          "generator_Pd": 0.9999999999571121,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9999294738566168,
+          "analytic_micro_iou": 0.9998589576604059
+        },
+        {
+          "snr_db": 5,
+          "generator_Pd": 0.9999999999990288,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 0.9999294738566168,
+          "analytic_micro_iou": 0.9998589576604059
+        }
+      ]
+    },
+    {
+      "rule": "Mark row busy iff at least 16 of 31 active-channel pixels are one.",
+      "threshold": 16,
+      "analytic_false_positive_rate_within_active_channel": 2.6080409268757338e-24,
+      "by_snr": [
+        {
+          "snr_db": -20,
+          "generator_Pd": 0.013751456900573255,
+          "analytic_recall": 4.042460725822352e-22,
+          "analytic_micro_f1": 8.084921451644704e-22,
+          "analytic_micro_iou": 4.042460725822352e-22
+        },
+        {
+          "snr_db": -19,
+          "generator_Pd": 0.014886484116018258,
+          "analytic_recall": 1.4147876385603587e-21,
+          "analytic_micro_f1": 2.8295752771207173e-21,
+          "analytic_micro_iou": 1.4147876385603587e-21
+        },
+        {
+          "snr_db": -18,
+          "generator_Pd": 0.016419902377266683,
+          "analytic_recall": 6.643714798945019e-21,
+          "analytic_micro_f1": 1.3287429597890038e-20,
+          "analytic_micro_iou": 6.643714798945019e-21
+        },
+        {
+          "snr_db": -17,
+          "generator_Pd": 0.0185248440437662,
+          "analytic_recall": 4.440625414923582e-20,
+          "analytic_micro_f1": 8.881250829847164e-20,
+          "analytic_micro_iou": 4.440625414923582e-20
+        },
+        {
+          "snr_db": -16,
+          "generator_Pd": 0.02146908941319098,
+          "analytic_recall": 4.508258296999264e-19,
+          "analytic_micro_f1": 9.016516593998528e-19,
+          "analytic_micro_iou": 4.508258296999264e-19
+        },
+        {
+          "snr_db": -15,
+          "generator_Pd": 0.02567740119463332,
+          "analytic_recall": 7.437903132653706e-18,
+          "analytic_micro_f1": 1.4875806265307412e-17,
+          "analytic_micro_iou": 7.437903132653706e-18
+        },
+        {
+          "snr_db": -14,
+          "generator_Pd": 0.03183989748265226,
+          "analytic_recall": 2.1252016624701852e-16,
+          "analytic_micro_f1": 4.25040332494037e-16,
+          "analytic_micro_iou": 2.1252016624701852e-16
+        },
+        {
+          "snr_db": -13,
+          "generator_Pd": 0.0411008515440842,
+          "analytic_recall": 1.103506304025107e-14,
+          "analytic_micro_f1": 2.2070126080501896e-14,
+          "analytic_micro_iou": 1.103506304025107e-14
+        },
+        {
+          "snr_db": -12,
+          "generator_Pd": 0.05538211831992065,
+          "analytic_recall": 1.0557870674402336e-12,
+          "analytic_micro_f1": 2.1115741348782377e-12,
+          "analytic_micro_iou": 1.0557870674402336e-12
+        },
+        {
+          "snr_db": -11,
+          "generator_Pd": 0.0779084003896991,
+          "analytic_recall": 1.7708616649334996e-10,
+          "analytic_micro_f1": 3.5417233292398086e-10,
+          "analytic_micro_iou": 1.7708616649334996e-10
+        },
+        {
+          "snr_db": -10,
+          "generator_Pd": 0.11395293971271368,
+          "analytic_recall": 4.455195086815261e-08,
+          "analytic_micro_f1": 8.910389776655276e-08,
+          "analytic_micro_iou": 4.455195086815261e-08
+        },
+        {
+          "snr_db": -9,
+          "generator_Pd": 0.17154747024761374,
+          "analytic_recall": 1.2226864738370678e-05,
+          "analytic_micro_f1": 2.445343048795439e-05,
+          "analytic_micro_iou": 1.2226864738370678e-05
+        },
+        {
+          "snr_db": -8,
+          "generator_Pd": 0.26108026216771163,
+          "analytic_recall": 0.00213109889712876,
+          "analytic_micro_f1": 0.004253133945197568,
+          "analytic_micro_iou": 0.00213109889712876
+        },
+        {
+          "snr_db": -7,
+          "generator_Pd": 0.39126880847629475,
+          "analytic_recall": 0.10833467869443743,
+          "analytic_micro_f1": 0.195490912225268,
+          "analytic_micro_iou": 0.10833467869443744
+        },
+        {
+          "snr_db": -6,
+          "generator_Pd": 0.558942981424775,
+          "analytic_recall": 0.7466540210252915,
+          "analytic_micro_f1": 0.8549535420724056,
+          "analytic_micro_iou": 0.7466540210252915
+        },
+        {
+          "snr_db": -5,
+          "generator_Pd": 0.7373167990830709,
+          "analytic_recall": 0.9977173849646837,
+          "analytic_micro_f1": 0.9988573884111457,
+          "analytic_micro_iou": 0.9977173849646835
+        },
+        {
+          "snr_db": -4,
+          "generator_Pd": 0.8817035414250374,
+          "analytic_recall": 0.999999924295109,
+          "analytic_micro_f1": 0.9999999621475532,
+          "analytic_micro_iou": 0.999999924295109
+        },
+        {
+          "snr_db": -3,
+          "generator_Pd": 0.963187254768155,
+          "analytic_recall": 0.999999999999998,
+          "analytic_micro_f1": 0.999999999999999,
+          "analytic_micro_iou": 0.9999999999999979
+        },
+        {
+          "snr_db": -2,
+          "generator_Pd": 0.9927022303481439,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 1.0,
+          "analytic_micro_iou": 1.0
+        },
+        {
+          "snr_db": -1,
+          "generator_Pd": 0.999127107152406,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 1.0,
+          "analytic_micro_iou": 1.0
+        },
+        {
+          "snr_db": 0,
+          "generator_Pd": 0.9999376826595625,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 1.0,
+          "analytic_micro_iou": 1.0
+        },
+        {
+          "snr_db": 1,
+          "generator_Pd": 0.9999972305777818,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 1.0,
+          "analytic_micro_iou": 1.0
+        },
+        {
+          "snr_db": 2,
+          "generator_Pd": 0.99999991587987,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 1.0,
+          "analytic_micro_iou": 1.0
+        },
+        {
+          "snr_db": 3,
+          "generator_Pd": 0.9999999980063385,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 1.0,
+          "analytic_micro_iou": 1.0
+        },
+        {
+          "snr_db": 4,
+          "generator_Pd": 0.9999999999571121,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 1.0,
+          "analytic_micro_iou": 1.0
+        },
+        {
+          "snr_db": 5,
+          "generator_Pd": 0.9999999999990288,
+          "analytic_recall": 1.0,
+          "analytic_micro_f1": 1.0,
+          "analytic_micro_iou": 1.0
+        }
+      ]
+    }
+  ],
+  "interpretation_limits": [
+    "Occupancy and template overlap are Monte Carlo estimates, not measurements on saved data.",
+    "Analytic metrics are large-sample micro metrics under independent Bernoulli pixel flips.",
+    "Configured active frequency interval is known to these baselines; evaluate an interval-blind variant too.",
+    "Thresholds are illustrative fixed baselines, not validated or tuned on a held-out dataset.",
+    "The row-count evaluation is analytic; it is not a measured runtime or trained-model comparison."
+  ]
+}

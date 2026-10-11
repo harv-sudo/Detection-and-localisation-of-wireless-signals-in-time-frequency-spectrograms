@@ -30,6 +30,9 @@ baseline_recreation/outputs/
 *.pth
 *.ckpt
 
+# Reproducible model comparison runs (checkpoints, split IDs, metrics)
+runs/
+
 # OS clutter
 .DS_Store
 Thumbs.db

@@ -1,0 +1,125 @@
+{
+  "device": "cuda",
+  "device_name": "AMD Radeon RX 9070 XT",
+  "torch_version": "2.12.0+rocm7.14.0",
+  "dtype": "float32",
+  "cpu_threads": 4,
+  "batch_size": 64,
+  "input_shape": [
+    64,
+    1,
+    50,
+    100
+  ],
+  "warmup_per_round": 30,
+  "iterations_per_round": 100,
+  "rounds": 3,
+  "trained_weights": true,
+  "run_directories": {
+    "fast": "runs/fast_unet_b8_seed42",
+    "unet": "runs/unet_bn_native_seed42",
+    "evidence": "runs/evidence_axial_seed42"
+  },
+  "native_batchnorm_only": true,
+  "records": [
+    {
+      "model": "unet",
+      "parameters": 1926433,
+      "convolution_macs_per_image": 685554176,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 14.355150007759221
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 14.357600011862814
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 14.690349999000318
+        }
+      ],
+      "median_batch_ms": 14.449549998971634,
+      "p95_batch_ms": 17.051899980288,
+      "mean_batch_ms": 14.670379999151919,
+      "amortized_mean_ms_per_image": 0.22922468748674873
+    },
+    {
+      "model": "unet_folded",
+      "parameters": 1925025,
+      "convolution_macs_per_image": 685554176,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 12.742349994368851
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 13.093349989503622
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 12.879050016636029
+        }
+      ],
+      "median_batch_ms": 12.941749999299645,
+      "p95_batch_ms": 15.335600008256733,
+      "mean_batch_ms": 13.072576001674557,
+      "amortized_mean_ms_per_image": 0.20425900002616496
+    },
+    {
+      "model": "evidence_axial",
+      "parameters": 37347,
+      "convolution_macs_per_image": 38810400,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 14.5885499950964
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 15.076199983013794
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 15.338199998950586
+        }
+      ],
+      "median_batch_ms": 15.076199983013794,
+      "p95_batch_ms": 17.387600004440174,
+      "mean_batch_ms": 15.208157333448375,
+      "amortized_mean_ms_per_image": 0.23762745833513085
+    },
+    {
+      "model": "fast_unet_b8_deploy",
+      "parameters": 120681,
+      "convolution_macs_per_image": 43147136,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 4.021949993330054
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 3.9195500139612705
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 4.183950004517101
+        }
+      ],
+      "median_batch_ms": 4.0250000020023435,
+      "p95_batch_ms": 5.040599993662909,
+      "mean_batch_ms": 4.082139333768282,
+      "amortized_mean_ms_per_image": 0.06378342709012941
+    }
+  ],
+  "memory_format": "contiguous",
+  "optimize_cpu": false,
+  "limitations": [
+    "Synchronized host-wall model forward; excludes loading, transfers and decoding.",
+    "Same FP32 policy; CPU inference graph optimization only when requested, for every model.",
+    "Convolution MACs exclude other operations and memory traffic."
+  ]
+}

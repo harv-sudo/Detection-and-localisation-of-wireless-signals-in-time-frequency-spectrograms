@@ -1,0 +1,4 @@
+# Install a platform-appropriate PyTorch build separately if using CUDA/ROCm.
+torch>=2.1
+numpy>=1.26
+h5py>=3.10

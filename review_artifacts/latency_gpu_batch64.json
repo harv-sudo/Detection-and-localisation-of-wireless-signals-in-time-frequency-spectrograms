@@ -1,0 +1,45 @@
+{
+  "device": "cuda",
+  "device_name": "AMD Radeon RX 9070 XT",
+  "torch_version": "2.12.0+rocm7.14.0",
+  "dtype": "float32",
+  "batch_size": 64,
+  "cudnn_miopen_enabled": true,
+  "native_batchnorm_only": true,
+  "input_shape": [
+    64,
+    1,
+    50,
+    100
+  ],
+  "cpu_threads": 4,
+  "warmup": 30,
+  "iterations": 100,
+  "records": [
+    {
+      "model": "unet",
+      "parameters": 1926433,
+      "convolution_macs_per_image": 685554176,
+      "median_batch_ms": 8.005550000234507,
+      "p95_batch_ms": 8.098999998765066,
+      "mean_batch_ms": 8.012339000124484,
+      "amortized_mean_ms_per_image": 0.12519279687694507
+    },
+    {
+      "model": "evidence_axial",
+      "parameters": 37347,
+      "convolution_macs_per_image": 38810400,
+      "median_batch_ms": 9.74895000399556,
+      "p95_batch_ms": 9.838099998887628,
+      "mean_batch_ms": 9.751453000644688,
+      "amortized_mean_ms_per_image": 0.15236645313507324
+    }
+  ],
+  "limitations": [
+    "Random weights; architecture benchmark, not accuracy evaluation.",
+    "Synchronized host-wall forward timings include Python dispatch and synchronization.",
+    "Excludes data loading, host/device transfer and prediction postprocessing.",
+    "MAC counts exclude pooling, normalization, activation, interpolation, refinement and memory traffic.",
+    "Do not compare timings obtained with concurrent accelerator workloads."
+  ]
+}

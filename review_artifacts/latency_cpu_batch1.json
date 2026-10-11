@@ -1,0 +1,45 @@
+{
+  "device": "cpu",
+  "device_name": "CPU",
+  "torch_version": "2.12.0+rocm7.14.0",
+  "dtype": "float32",
+  "batch_size": 1,
+  "cudnn_miopen_enabled": true,
+  "native_batchnorm_only": false,
+  "input_shape": [
+    1,
+    1,
+    50,
+    100
+  ],
+  "cpu_threads": 4,
+  "warmup": 30,
+  "iterations": 200,
+  "records": [
+    {
+      "model": "unet",
+      "parameters": 1926433,
+      "convolution_macs_per_image": 685554176,
+      "median_batch_ms": 10.310800003935583,
+      "p95_batch_ms": 11.579999991226941,
+      "mean_batch_ms": 10.574356500583235,
+      "amortized_mean_ms_per_image": 10.574356500583235
+    },
+    {
+      "model": "evidence_axial",
+      "parameters": 37347,
+      "convolution_macs_per_image": 38810400,
+      "median_batch_ms": 1.8233500013593584,
+      "p95_batch_ms": 2.123699989169836,
+      "mean_batch_ms": 1.87282050086651,
+      "amortized_mean_ms_per_image": 1.87282050086651
+    }
+  ],
+  "limitations": [
+    "Random weights; architecture benchmark, not accuracy evaluation.",
+    "Synchronized host-wall forward timings include Python dispatch and synchronization.",
+    "Excludes data loading, host/device transfer and prediction postprocessing.",
+    "MAC counts exclude pooling, normalization, activation, interpolation, refinement and memory traffic.",
+    "Do not compare timings obtained with concurrent accelerator workloads."
+  ]
+}
