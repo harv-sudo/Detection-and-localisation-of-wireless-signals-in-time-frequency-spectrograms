@@ -46,7 +46,7 @@ def binomial_tail(probability, threshold, width=31):
     return sum(
         math.comb(width, successes)
         * probability**successes
-        * (1 - probability)**(width - successes)
+        * (1 - probability) ** (width - successes)
         for successes in range(threshold, width + 1)
     )
 
@@ -108,19 +108,23 @@ def run(count=100_000, seed=42):
             tp = occupancy * recall
             fp = (1 - occupancy) * false_positive_rate
             fn = occupancy * (1 - recall)
-            by_snr.append({
-                "snr_db": snr_db,
-                "generator_Pd": pd,
-                "analytic_recall": recall,
-                "analytic_micro_f1": 2 * tp / (2 * tp + fp + fn),
-                "analytic_micro_iou": tp / (tp + fp + fn),
-            })
-        report["row_count_baselines"].append({
-            "rule": f"Mark row busy iff at least {threshold} of 31 active-channel pixels are one.",
-            "threshold": threshold,
-            "analytic_false_positive_rate_within_active_channel": false_positive_rate,
-            "by_snr": by_snr,
-        })
+            by_snr.append(
+                {
+                    "snr_db": snr_db,
+                    "generator_Pd": pd,
+                    "analytic_recall": recall,
+                    "analytic_micro_f1": 2 * tp / (2 * tp + fp + fn),
+                    "analytic_micro_iou": tp / (tp + fp + fn),
+                }
+            )
+        report["row_count_baselines"].append(
+            {
+                "rule": f"Mark row busy iff at least {threshold} of 31 active-channel pixels are one.",
+                "threshold": threshold,
+                "analytic_false_positive_rate_within_active_channel": false_positive_rate,
+                "by_snr": by_snr,
+            }
+        )
 
     report["interpretation_limits"] = [
         "Occupancy and template overlap are Monte Carlo estimates, not measurements on saved data.",

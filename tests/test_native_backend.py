@@ -1,4 +1,5 @@
 """Verify that the ROCm workaround changes only BatchNorm dispatch."""
+
 import unittest
 from unittest.mock import patch
 
@@ -13,19 +14,20 @@ class NativeBatchNormTests(unittest.TestCase):
         try:
             torch.backends.cudnn.enabled = True
             for raise_error in (False, True):
+
                 def original(*args, **kwargs):
                     self.assertFalse(torch.backends.cudnn.enabled)
                     if raise_error:
-                        raise RuntimeError('simulated operation failure')
-                    return 'result'
+                        raise RuntimeError("simulated operation failure")
+                    return "result"
 
-                with patch('torch.nn.functional.batch_norm', original):
+                with patch("torch.nn.functional.batch_norm", original):
                     enable_native_batchnorm()
                     if raise_error:
-                        with self.assertRaisesRegex(RuntimeError, 'simulated'):
+                        with self.assertRaisesRegex(RuntimeError, "simulated"):
                             torch.nn.functional.batch_norm()
                     else:
-                        self.assertEqual(torch.nn.functional.batch_norm(), 'result')
+                        self.assertEqual(torch.nn.functional.batch_norm(), "result")
                     self.assertTrue(torch.backends.cudnn.enabled)
         finally:
             torch.backends.cudnn.enabled = initial
@@ -39,7 +41,7 @@ class NativeBatchNormTests(unittest.TestCase):
         expected = reference(inputs)
         expected.square().mean().backward()
         original = torch.nn.functional.batch_norm
-        with patch('torch.nn.functional.batch_norm', original):
+        with patch("torch.nn.functional.batch_norm", original):
             enable_native_batchnorm()
             actual = candidate(inputs)
             actual.square().mean().backward()
@@ -50,5 +52,5 @@ class NativeBatchNormTests(unittest.TestCase):
         self.assertEqual(candidate.num_batches_tracked, reference.num_batches_tracked)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

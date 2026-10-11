@@ -5,6 +5,7 @@ convolutions. PyTorch's inference graph pass selects/fuses oneDNN kernels.
 Prepare once outside the timed/request path. Recreate the graph after loading
 weights: optimized oneDNN graphs are not a portable serialization format.
 """
+
 import copy
 import warnings
 
@@ -24,20 +25,36 @@ def replace_nonoverlapping_upsampling(model):
 
     def replace(parent):
         for name, child in list(parent.named_children()):
-            if (isinstance(child, nn.ConvTranspose2d) and child.kernel_size == (2, 2)
-                    and child.stride == (2, 2) and child.padding == (0, 0)
-                    and child.output_padding == (0, 0) and child.dilation == (1, 1)
-                    and child.groups == 1):
-                projection = nn.Conv2d(child.in_channels, child.out_channels * 4, 1,
-                                       bias=child.bias is not None,
-                                       device=child.weight.device, dtype=child.weight.dtype)
-                projection.weight.copy_(child.weight.permute(1, 2, 3, 0).reshape(
-                    child.out_channels * 4, child.in_channels, 1, 1))
+            if (
+                isinstance(child, nn.ConvTranspose2d)
+                and child.kernel_size == (2, 2)
+                and child.stride == (2, 2)
+                and child.padding == (0, 0)
+                and child.output_padding == (0, 0)
+                and child.dilation == (1, 1)
+                and child.groups == 1
+            ):
+                projection = nn.Conv2d(
+                    child.in_channels,
+                    child.out_channels * 4,
+                    1,
+                    bias=child.bias is not None,
+                    device=child.weight.device,
+                    dtype=child.weight.dtype,
+                )
+                projection.weight.copy_(
+                    child.weight.permute(1, 2, 3, 0).reshape(
+                        child.out_channels * 4, child.in_channels, 1, 1
+                    )
+                )
                 if child.bias is not None:
                     projection.bias.copy_(child.bias.repeat_interleave(4))
-                setattr(parent, name, nn.Sequential(projection, nn.PixelShuffle(2)).eval())
+                setattr(
+                    parent, name, nn.Sequential(projection, nn.PixelShuffle(2)).eval()
+                )
             else:
                 replace(child)
+
     replace(result)
     return result
 
@@ -54,9 +71,16 @@ class PreparedCPUModel(nn.Module):
         return super().train(False)
 
     def forward(self, x):
-        if (x.device.type != "cpu" or x.dtype != torch.float32 or x.ndim != 4
-                or x.shape[0] < 1 or tuple(x.shape[1:]) != (1, self.height, self.width)):
-            raise ValueError(f"Prepared graph expects FP32 CPU Bx1x{self.height}x{self.width}")
+        if (
+            x.device.type != "cpu"
+            or x.dtype != torch.float32
+            or x.ndim != 4
+            or x.shape[0] < 1
+            or tuple(x.shape[1:]) != (1, self.height, self.width)
+        ):
+            raise ValueError(
+                f"Prepared graph expects FP32 CPU Bx1x{self.height}x{self.width}"
+            )
         return self.graph(x)
 
 

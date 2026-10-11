@@ -43,12 +43,20 @@ class _AxialResidualBlock(nn.Module):
         super().__init__()
         self.norm = _group_norm(channels)
         self.frequency_conv = nn.Conv2d(
-            channels, channels, (1, 5), padding=(0, 2),
-            groups=channels, bias=False,
+            channels,
+            channels,
+            (1, 5),
+            padding=(0, 2),
+            groups=channels,
+            bias=False,
         )
         self.time_conv = nn.Conv2d(
-            channels, channels, (5, 1), padding=(2, 0),
-            groups=channels, bias=False,
+            channels,
+            channels,
+            (5, 1),
+            padding=(2, 0),
+            groups=channels,
+            bias=False,
         )
         self.mix = nn.Conv2d(channels, channels, 1, bias=False)
 
@@ -64,8 +72,12 @@ class _ConvStage(nn.Module):
         super().__init__()
         self.project = nn.Sequential(
             nn.Conv2d(
-                in_channels, out_channels, 3, stride=stride,
-                padding=1, bias=False,
+                in_channels,
+                out_channels,
+                3,
+                stride=stride,
+                padding=1,
+                bias=False,
             ),
             _group_norm(out_channels),
             nn.SiLU(),
@@ -87,9 +99,7 @@ class _DecoderStage(nn.Module):
         self.residual = _AxialResidualBlock(out_channels)
 
     def forward(self, x, skip):
-        x = F.interpolate(
-            x, size=skip.shape[-2:], mode="bilinear", align_corners=False
-        )
+        x = F.interpolate(x, size=skip.shape[-2:], mode="bilinear", align_corners=False)
         return self.residual(self.fuse(torch.cat((x, skip), dim=1)))
 
 
@@ -126,11 +136,17 @@ class EvidenceAxialNet(nn.Module):
         use_refinement=True,
     ):
         super().__init__()
-        if (isinstance(base_channels, bool)
-                or not isinstance(base_channels, int) or base_channels < 4):
+        if (
+            isinstance(base_channels, bool)
+            or not isinstance(base_channels, int)
+            or base_channels < 4
+        ):
             raise ValueError("base_channels must be an integer >= 4")
-        if (isinstance(refinement_steps, bool)
-                or not isinstance(refinement_steps, int) or refinement_steps < 0):
+        if (
+            isinstance(refinement_steps, bool)
+            or not isinstance(refinement_steps, int)
+            or refinement_steps < 0
+        ):
             raise ValueError("refinement_steps must be a nonnegative integer")
         if not isinstance(use_evidence, bool) or not isinstance(use_refinement, bool):
             raise TypeError("use_evidence and use_refinement must be booleans")
@@ -148,9 +164,7 @@ class EvidenceAxialNet(nn.Module):
         self.decoder1 = _DecoderStage(
             4 * base_channels, 2 * base_channels, 2 * base_channels
         )
-        self.decoder0 = _DecoderStage(
-            2 * base_channels, base_channels, base_channels
-        )
+        self.decoder0 = _DecoderStage(2 * base_channels, base_channels, base_channels)
         self.unary_head = nn.Conv2d(base_channels, 1, 1)
 
         if use_refinement:
@@ -170,15 +184,21 @@ class EvidenceAxialNet(nn.Module):
             return x.new_empty((x.shape[0], 0, x.shape[2], x.shape[3]))
         frequency = [
             F.avg_pool2d(
-                x, kernel_size=(1, span), stride=1,
-                padding=(0, span // 2), count_include_pad=False,
+                x,
+                kernel_size=(1, span),
+                stride=1,
+                padding=(0, span // 2),
+                count_include_pad=False,
             )
             for span in self.FREQUENCY_SPANS
         ]
         time = [
             F.avg_pool2d(
-                x, kernel_size=(span, 1), stride=1,
-                padding=(span // 2, 0), count_include_pad=False,
+                x,
+                kernel_size=(span, 1),
+                stride=1,
+                padding=(span // 2, 0),
+                count_include_pad=False,
             )
             for span in self.TIME_SPANS
         ]
@@ -236,9 +256,9 @@ class EvidenceAxialNet(nn.Module):
             )
             for _ in range(self.refinement_steps):
                 signed_probs = 2.0 * torch.sigmoid(logits) - 1.0
-                message = self._neighbour_sum(
-                    signed_probs, horizontal, vertical
-                ) / normalizer
+                message = (
+                    self._neighbour_sum(signed_probs, horizontal, vertical) / normalizer
+                )
                 # Reset to unary each iteration; do not accumulate logits.
                 logits = unary + strength * message
         elif return_aux:

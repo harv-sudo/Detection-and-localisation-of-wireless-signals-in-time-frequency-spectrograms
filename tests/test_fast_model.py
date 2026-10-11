@@ -1,4 +1,5 @@
 """Deployment equivalence is essential: speed must not silently alter logits."""
+
 import io
 import unittest
 
@@ -86,13 +87,19 @@ class FastModelTests(unittest.TestCase):
 
     def test_subpixel_weight_permutation_matches_nonoverlapping_transpose(self):
         for bias in (True, False):
-            original = nn.Sequential(nn.ConvTranspose2d(5, 3, 2, stride=2, bias=bias)).eval()
+            original = nn.Sequential(
+                nn.ConvTranspose2d(5, 3, 2, stride=2, bias=bias)
+            ).eval()
             converted = replace_nonoverlapping_upsampling(original)
             for spatial in ((6, 12), (7, 13)):
                 x = torch.randn(2, 5, *spatial)
-                torch.testing.assert_close(converted(x), original(x), rtol=2e-5, atol=2e-5)
+                torch.testing.assert_close(
+                    converted(x), original(x), rtol=2e-5, atol=2e-5
+                )
         overlapping = nn.Sequential(nn.ConvTranspose2d(5, 3, 3, stride=2)).eval()
-        self.assertIsInstance(replace_nonoverlapping_upsampling(overlapping)[0], nn.ConvTranspose2d)
+        self.assertIsInstance(
+            replace_nonoverlapping_upsampling(overlapping)[0], nn.ConvTranspose2d
+        )
 
     def test_runner_restores_baseline_hooks_even_on_failure(self):
         factory, sources = experiment.make_model, experiment.source_fingerprints

@@ -6,6 +6,7 @@ into one 3x3 convolution. No quantization, pruning or data changes are involved.
 This is an application of established structural reparameterization, not a
 claim that the technique or its combination with U-Net is novel.
 """
+
 import copy
 
 import torch
@@ -24,11 +25,21 @@ class RepConv(nn.Module):
         else:
             self.spatial = nn.Sequential(
                 nn.Conv2d(in_channels, out_channels, 3, padding=1, bias=False),
-                nn.BatchNorm2d(out_channels))
-            self.pointwise = nn.Sequential(
-                nn.Conv2d(in_channels, out_channels, 1, bias=False),
-                nn.BatchNorm2d(out_channels)) if branches else None
-            self.identity = nn.BatchNorm2d(in_channels) if branches and in_channels == out_channels else None
+                nn.BatchNorm2d(out_channels),
+            )
+            self.pointwise = (
+                nn.Sequential(
+                    nn.Conv2d(in_channels, out_channels, 1, bias=False),
+                    nn.BatchNorm2d(out_channels),
+                )
+                if branches
+                else None
+            )
+            self.identity = (
+                nn.BatchNorm2d(in_channels)
+                if branches and in_channels == out_channels
+                else None
+            )
         self.activation = nn.ReLU(inplace=True)
 
     def forward(self, x):
@@ -66,8 +77,10 @@ class RepConv(nn.Module):
 
 
 def _double(in_channels, out_channels, deploy, branches):
-    return nn.Sequential(RepConv(in_channels, out_channels, deploy, branches),
-                         RepConv(out_channels, out_channels, deploy, branches))
+    return nn.Sequential(
+        RepConv(in_channels, out_channels, deploy, branches),
+        RepConv(out_channels, out_channels, deploy, branches),
+    )
 
 
 class _Up(nn.Module):
@@ -79,7 +92,9 @@ class _Up(nn.Module):
     def forward(self, x, skip):
         x = self.up(x)
         if x.shape[-2:] != skip.shape[-2:]:
-            x = F.interpolate(x, size=skip.shape[-2:], mode="bilinear", align_corners=False)
+            x = F.interpolate(
+                x, size=skip.shape[-2:], mode="bilinear", align_corners=False
+            )
         return self.conv(torch.cat((skip, x), dim=1))
 
 
@@ -90,20 +105,31 @@ class FastUNet(nn.Module):
     The default b=8 is a latency candidate, whose accuracy must be measured.
     ``model.eval().to_deploy()`` returns a separate model with merged branches.
     """
+
     def __init__(self, base_channels=8, deploy=False, branches=True):
         super().__init__()
-        if isinstance(base_channels, bool) or not isinstance(base_channels, int) or base_channels < 1:
+        if (
+            isinstance(base_channels, bool)
+            or not isinstance(base_channels, int)
+            or base_channels < 1
+        ):
             raise ValueError("base_channels must be a positive integer")
         self.base_channels = base_channels
         self.branches = branches
         b = base_channels
         self.encoder0 = _double(1, b, deploy, branches)
-        self.encoder1 = nn.Sequential(nn.MaxPool2d(2), _double(b, 2*b, deploy, branches))
-        self.encoder2 = nn.Sequential(nn.MaxPool2d(2), _double(2*b, 4*b, deploy, branches))
-        self.bottleneck = nn.Sequential(nn.MaxPool2d(2), _double(4*b, 8*b, deploy, branches))
-        self.decoder2 = _Up(8*b, 4*b, deploy, branches)
-        self.decoder1 = _Up(4*b, 2*b, deploy, branches)
-        self.decoder0 = _Up(2*b, b, deploy, branches)
+        self.encoder1 = nn.Sequential(
+            nn.MaxPool2d(2), _double(b, 2 * b, deploy, branches)
+        )
+        self.encoder2 = nn.Sequential(
+            nn.MaxPool2d(2), _double(2 * b, 4 * b, deploy, branches)
+        )
+        self.bottleneck = nn.Sequential(
+            nn.MaxPool2d(2), _double(4 * b, 8 * b, deploy, branches)
+        )
+        self.decoder2 = _Up(8 * b, 4 * b, deploy, branches)
+        self.decoder1 = _Up(4 * b, 2 * b, deploy, branches)
+        self.decoder0 = _Up(2 * b, b, deploy, branches)
         self.output = nn.Conv2d(b, 1, 1)
 
     def forward(self, x):
@@ -139,7 +165,11 @@ def fuse_unet_batchnorm(model):
     for sequence in result.modules():
         if isinstance(sequence, nn.Sequential):
             for index in range(len(sequence) - 1):
-                if isinstance(sequence[index], nn.Conv2d) and isinstance(sequence[index + 1], nn.BatchNorm2d):
-                    sequence[index] = fuse_conv_bn_eval(sequence[index], sequence[index + 1])
+                if isinstance(sequence[index], nn.Conv2d) and isinstance(
+                    sequence[index + 1], nn.BatchNorm2d
+                ):
+                    sequence[index] = fuse_conv_bn_eval(
+                        sequence[index], sequence[index + 1]
+                    )
                     sequence[index + 1] = nn.Identity()
     return result

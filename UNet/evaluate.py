@@ -28,6 +28,7 @@ THRESHOLD = 0.5
 # Metrics
 # =========================================================
 
+
 def calculate_metrics(preds, targets):
     """
     Calculate TP, FP, FN, intersection and union.
@@ -38,30 +39,15 @@ def calculate_metrics(preds, targets):
     preds = preds.bool()
     targets = targets.bool()
 
-    tp = torch.logical_and(
-        preds,
-        targets
-    ).sum().item()
+    tp = torch.logical_and(preds, targets).sum().item()
 
-    fp = torch.logical_and(
-        preds,
-        ~targets
-    ).sum().item()
+    fp = torch.logical_and(preds, ~targets).sum().item()
 
-    fn = torch.logical_and(
-        ~preds,
-        targets
-    ).sum().item()
+    fn = torch.logical_and(~preds, targets).sum().item()
 
-    intersection = torch.logical_and(
-        preds,
-        targets
-    ).sum().item()
+    intersection = torch.logical_and(preds, targets).sum().item()
 
-    union = torch.logical_or(
-        preds,
-        targets
-    ).sum().item()
+    union = torch.logical_or(preds, targets).sum().item()
 
     return tp, fp, fn, intersection, union
 
@@ -86,6 +72,7 @@ def calculate_iou(intersection, union):
 # Evaluation
 # =========================================================
 
+
 def evaluate():
 
     # -----------------------------------------------------
@@ -102,87 +89,43 @@ def evaluate():
     else:
         device = torch.device("cpu")
 
-    print(
-        f"Using device: {device}",
-        flush=True
-    )
+    print(f"Using device: {device}", flush=True)
 
     if torch.cuda.is_available():
-
-        print(
-            f"Accelerator: "
-            f"{torch.cuda.get_device_name(0)}",
-            flush=True
-        )
+        print(f"Accelerator: {torch.cuda.get_device_name(0)}", flush=True)
 
         if torch.version.hip is not None:
-
-            print(
-                f"Backend: AMD ROCm "
-                f"(HIP {torch.version.hip})",
-                flush=True
-            )
+            print(f"Backend: AMD ROCm (HIP {torch.version.hip})", flush=True)
 
         else:
-
-            print(
-                f"Backend: NVIDIA CUDA "
-                f"({torch.version.cuda})",
-                flush=True
-            )
+            print(f"Backend: NVIDIA CUDA ({torch.version.cuda})", flush=True)
 
     else:
-
-        print(
-            "Backend: CPU",
-            flush=True
-        )
+        print("Backend: CPU", flush=True)
 
     # -----------------------------------------------------
     # Dataset
     # -----------------------------------------------------
 
-    print(
-        "Loading dataset...",
-        flush=True
-    )
+    print("Loading dataset...", flush=True)
 
-    dataset = UNetSignalDataset(
-        DATA_DIR
-    )
+    dataset = UNetSignalDataset(DATA_DIR)
 
     n_total = len(dataset)
 
-    n_train = int(
-        TRAIN_SPLIT * n_total
-    )
+    n_train = int(TRAIN_SPLIT * n_total)
 
-    n_val = int(
-        VAL_SPLIT * n_total
-    )
+    n_val = int(VAL_SPLIT * n_total)
 
-    n_test = (
-        n_total
-        - n_train
-        - n_val
-    )
+    n_test = n_total - n_train - n_val
 
     _, _, test_ds = random_split(
         dataset,
-        [
-            n_train,
-            n_val,
-            n_test
-        ],
-        generator=torch.Generator().manual_seed(
-            SEED
-        ),
+        [n_train, n_val, n_test],
+        generator=torch.Generator().manual_seed(SEED),
     )
 
-    print(
-        f"Test samples: {len(test_ds)}",
-        flush=True
-    )
+    print(f"Test samples: {len(test_ds)}", flush=True)
 
     test_loader = DataLoader(
         test_ds,
@@ -205,16 +148,12 @@ def evaluate():
         weights_only=False,
     )
 
-    model.load_state_dict(
-        checkpoint["model_state_dict"]
-    )
+    model.load_state_dict(checkpoint["model_state_dict"])
 
     model.eval()
 
     print(
-        f"Loaded checkpoint from epoch "
-        f"{checkpoint.get('epoch', 'unknown')}",
-        flush=True
+        f"Loaded checkpoint from epoch {checkpoint.get('epoch', 'unknown')}", flush=True
     )
 
     # -----------------------------------------------------
@@ -235,31 +174,13 @@ def evaluate():
     # Evaluation loop
     # -----------------------------------------------------
 
-    print(
-        "Evaluating...",
-        flush=True
-    )
+    print("Evaluating...", flush=True)
 
     with torch.no_grad():
+        for batch_idx, (x, y, _) in enumerate(test_loader, start=1):
+            x = x.to(device, non_blocking=True)
 
-        for batch_idx, (
-            x,
-            y,
-            _
-        ) in enumerate(
-            test_loader,
-            start=1
-        ):
-
-            x = x.to(
-                device,
-                non_blocking=True
-            )
-
-            y = y.to(
-                device,
-                non_blocking=True
-            )
+            y = y.to(device, non_blocking=True)
 
             # ---------------------------------------------
             # Synchronise accelerator before timing
@@ -281,40 +202,23 @@ def evaluate():
             # Convert logits -> probabilities -> mask
             # ---------------------------------------------
 
-            probs = torch.sigmoid(
-                logits
-            )
+            probs = torch.sigmoid(logits)
 
-            preds = (
-                probs > THRESHOLD
-            )
+            preds = probs > THRESHOLD
 
-            targets = (
-                y > 0.5
-            )
+            targets = y > 0.5
 
             # ---------------------------------------------
             # Metrics
             # ---------------------------------------------
 
-            (
-                tp,
-                fp,
-                fn,
-                intersection,
-                union
-            ) = calculate_metrics(
-                preds,
-                targets
-            )
+            (tp, fp, fn, intersection, union) = calculate_metrics(preds, targets)
 
             total_tp += tp
             total_fp += fp
             total_fn += fn
 
-            total_intersection += (
-                intersection
-            )
+            total_intersection += intersection
 
             total_union += union
 
@@ -322,116 +226,54 @@ def evaluate():
 
             total_samples += batch_size
 
-            total_inference_time += (
-                end - start
-            )
+            total_inference_time += end - start
 
             if batch_idx % 500 == 0:
-
-                print(
-                    f"Processed "
-                    f"{batch_idx}/"
-                    f"{len(test_loader)} "
-                    f"batches",
-                    flush=True
-                )
+                print(f"Processed {batch_idx}/{len(test_loader)} batches", flush=True)
 
     # =====================================================
     # Final metrics
     # =====================================================
 
-    mean_f1 = calculate_f1(
-        total_tp,
-        total_fp,
-        total_fn
-    )
+    mean_f1 = calculate_f1(total_tp, total_fp, total_fn)
 
-    mean_iou = calculate_iou(
-        total_intersection,
-        total_union
-    )
+    mean_iou = calculate_iou(total_intersection, total_union)
 
-    mean_inference_time = (
-        total_inference_time
-        / total_samples
-        * 1000
-    )
+    mean_inference_time = total_inference_time / total_samples * 1000
 
     # -----------------------------------------------------
     # Precision / Recall
     # -----------------------------------------------------
 
-    precision_denominator = (
-        total_tp + total_fp
-    )
+    precision_denominator = total_tp + total_fp
 
-    recall_denominator = (
-        total_tp + total_fn
-    )
+    recall_denominator = total_tp + total_fn
 
-    precision = (
-        total_tp
-        / precision_denominator
-        if precision_denominator > 0
-        else 1.0
-    )
+    precision = total_tp / precision_denominator if precision_denominator > 0 else 1.0
 
-    recall = (
-        total_tp
-        / recall_denominator
-        if recall_denominator > 0
-        else 1.0
-    )
+    recall = total_tp / recall_denominator if recall_denominator > 0 else 1.0
 
     # =====================================================
     # Results
     # =====================================================
 
-    print(
-        "",
-        flush=True
-    )
+    print("", flush=True)
 
-    print(
-        "U-Net Evaluation Results",
-        flush=True
-    )
+    print("U-Net Evaluation Results", flush=True)
 
-    print(
-        "------------------------",
-        flush=True
-    )
+    print("------------------------", flush=True)
 
-    print(
-        f"Samples: {total_samples}",
-        flush=True
-    )
+    print(f"Samples: {total_samples}", flush=True)
 
-    print(
-        f"F1 / Dice: {mean_f1:.4f}",
-        flush=True
-    )
+    print(f"F1 / Dice: {mean_f1:.4f}", flush=True)
 
-    print(
-        f"IoU:       {mean_iou:.4f}",
-        flush=True
-    )
+    print(f"IoU:       {mean_iou:.4f}", flush=True)
 
-    print(
-        f"Precision: {precision:.4f}",
-        flush=True
-    )
+    print(f"Precision: {precision:.4f}", flush=True)
 
-    print(
-        f"Recall:    {recall:.4f}",
-        flush=True
-    )
+    print(f"Recall:    {recall:.4f}", flush=True)
 
-    print(
-        f"Mean inference time/sample: "
-        f"{mean_inference_time:.4f} ms",
-        flush=True
-    )
+    print(f"Mean inference time/sample: {mean_inference_time:.4f} ms", flush=True)
 
 
 if __name__ == "__main__":

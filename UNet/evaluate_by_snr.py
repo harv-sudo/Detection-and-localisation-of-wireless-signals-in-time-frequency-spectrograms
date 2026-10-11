@@ -30,34 +30,20 @@ THRESHOLD = 0.5
 # Metrics
 # =========================================================
 
+
 def calculate_metrics(preds, targets):
     preds = preds.bool()
     targets = targets.bool()
 
-    tp = torch.logical_and(
-        preds,
-        targets
-    ).sum().item()
+    tp = torch.logical_and(preds, targets).sum().item()
 
-    fp = torch.logical_and(
-        preds,
-        ~targets
-    ).sum().item()
+    fp = torch.logical_and(preds, ~targets).sum().item()
 
-    fn = torch.logical_and(
-        ~preds,
-        targets
-    ).sum().item()
+    fn = torch.logical_and(~preds, targets).sum().item()
 
-    intersection = torch.logical_and(
-        preds,
-        targets
-    ).sum().item()
+    intersection = torch.logical_and(preds, targets).sum().item()
 
-    union = torch.logical_or(
-        preds,
-        targets
-    ).sum().item()
+    union = torch.logical_or(preds, targets).sum().item()
 
     return tp, fp, fn, intersection, union
 
@@ -82,6 +68,7 @@ def calculate_iou(intersection, union):
 # Evaluation
 # =========================================================
 
+
 def evaluate_by_snr():
 
     # -----------------------------------------------------
@@ -98,87 +85,43 @@ def evaluate_by_snr():
     else:
         device = torch.device("cpu")
 
-    print(
-        f"Using device: {device}",
-        flush=True
-    )
+    print(f"Using device: {device}", flush=True)
 
     if torch.cuda.is_available():
-
-        print(
-            f"Accelerator: "
-            f"{torch.cuda.get_device_name(0)}",
-            flush=True
-        )
+        print(f"Accelerator: {torch.cuda.get_device_name(0)}", flush=True)
 
         if torch.version.hip is not None:
-
-            print(
-                f"Backend: AMD ROCm "
-                f"(HIP {torch.version.hip})",
-                flush=True
-            )
+            print(f"Backend: AMD ROCm (HIP {torch.version.hip})", flush=True)
 
         else:
-
-            print(
-                f"Backend: NVIDIA CUDA "
-                f"({torch.version.cuda})",
-                flush=True
-            )
+            print(f"Backend: NVIDIA CUDA ({torch.version.cuda})", flush=True)
 
     else:
-
-        print(
-            "Backend: CPU",
-            flush=True
-        )
+        print("Backend: CPU", flush=True)
 
     # -----------------------------------------------------
     # Dataset
     # -----------------------------------------------------
 
-    print(
-        "Loading dataset...",
-        flush=True
-    )
+    print("Loading dataset...", flush=True)
 
-    dataset = UNetSignalDataset(
-        DATA_DIR
-    )
+    dataset = UNetSignalDataset(DATA_DIR)
 
     n_total = len(dataset)
 
-    n_train = int(
-        TRAIN_SPLIT * n_total
-    )
+    n_train = int(TRAIN_SPLIT * n_total)
 
-    n_val = int(
-        VAL_SPLIT * n_total
-    )
+    n_val = int(VAL_SPLIT * n_total)
 
-    n_test = (
-        n_total
-        - n_train
-        - n_val
-    )
+    n_test = n_total - n_train - n_val
 
     _, _, test_ds = random_split(
         dataset,
-        [
-            n_train,
-            n_val,
-            n_test
-        ],
-        generator=torch.Generator().manual_seed(
-            SEED
-        ),
+        [n_train, n_val, n_test],
+        generator=torch.Generator().manual_seed(SEED),
     )
 
-    print(
-        f"Test samples: {len(test_ds)}",
-        flush=True
-    )
+    print(f"Test samples: {len(test_ds)}", flush=True)
 
     test_loader = DataLoader(
         test_ds,
@@ -201,16 +144,12 @@ def evaluate_by_snr():
         weights_only=False,
     )
 
-    model.load_state_dict(
-        checkpoint["model_state_dict"]
-    )
+    model.load_state_dict(checkpoint["model_state_dict"])
 
     model.eval()
 
     print(
-        f"Loaded checkpoint from epoch "
-        f"{checkpoint.get('epoch', 'unknown')}",
-        flush=True
+        f"Loaded checkpoint from epoch {checkpoint.get('epoch', 'unknown')}", flush=True
     )
 
     # -----------------------------------------------------
@@ -235,31 +174,13 @@ def evaluate_by_snr():
     # Evaluation loop
     # -----------------------------------------------------
 
-    print(
-        "Evaluating by SNR...",
-        flush=True
-    )
+    print("Evaluating by SNR...", flush=True)
 
     with torch.no_grad():
+        for batch_idx, (x, y, snr_batch) in enumerate(test_loader, start=1):
+            x = x.to(device, non_blocking=True)
 
-        for batch_idx, (
-            x,
-            y,
-            snr_batch
-        ) in enumerate(
-            test_loader,
-            start=1
-        ):
-
-            x = x.to(
-                device,
-                non_blocking=True
-            )
-
-            y = y.to(
-                device,
-                non_blocking=True
-            )
+            y = y.to(device, non_blocking=True)
 
             # ---------------------------------------------
             # Inference timing
@@ -277,206 +198,103 @@ def evaluate_by_snr():
 
             end = time.perf_counter()
 
-            batch_inference_time = (
-                end - start
-            )
+            batch_inference_time = end - start
 
             # ---------------------------------------------
             # Prediction masks
             # ---------------------------------------------
 
-            probs = torch.sigmoid(
-                logits
-            )
+            probs = torch.sigmoid(logits)
 
-            preds = (
-                probs > THRESHOLD
-            )
+            preds = probs > THRESHOLD
 
-            targets = (
-                y > 0.5
-            )
+            targets = y > 0.5
 
             # Bring SNR values to CPU
-            snr_batch = (
-                snr_batch
-                .detach()
-                .cpu()
-                .numpy()
-            )
+            snr_batch = snr_batch.detach().cpu().numpy()
 
             # ---------------------------------------------
             # Process each SNR group separately
             # ---------------------------------------------
 
-            unique_snrs = np.unique(
-                snr_batch
-            )
+            unique_snrs = np.unique(snr_batch)
 
             for snr_value in unique_snrs:
+                snr = int(round(float(snr_value)))
 
-                snr = int(
-                    round(
-                        float(snr_value)
-                    )
+                mask_np = snr_batch == snr_value
+
+                indices = torch.from_numpy(np.where(mask_np)[0]).to(
+                    device=device, dtype=torch.long
                 )
 
-                mask_np = (
-                    snr_batch == snr_value
+                preds_snr = torch.index_select(preds, dim=0, index=indices)
+
+                targets_snr = torch.index_select(targets, dim=0, index=indices)
+
+                (tp, fp, fn, intersection, union) = calculate_metrics(
+                    preds_snr, targets_snr
                 )
 
-                indices = torch.from_numpy(
-                    np.where(mask_np)[0]
-                ).to(
-                    device=device,
-                    dtype=torch.long
-                )
-
-                preds_snr = torch.index_select(
-                    preds,
-                    dim=0,
-                    index=indices
-                )
-
-                targets_snr = torch.index_select(
-                    targets,
-                    dim=0,
-                    index=indices
-                )
-
-                (
-                    tp,
-                    fp,
-                    fn,
-                    intersection,
-                    union
-                ) = calculate_metrics(
-                    preds_snr,
-                    targets_snr
-                )
-
-                sample_count = len(
-                    indices
-                )
+                sample_count = len(indices)
 
                 results[snr]["tp"] += tp
                 results[snr]["fp"] += fp
                 results[snr]["fn"] += fn
 
-                results[snr][
-                    "intersection"
-                ] += intersection
+                results[snr]["intersection"] += intersection
 
-                results[snr][
-                    "union"
-                ] += union
+                results[snr]["union"] += union
 
-                results[snr][
-                    "samples"
-                ] += sample_count
+                results[snr]["samples"] += sample_count
 
                 # Approximate inference time contribution
                 # based on this group's share of the batch.
-                results[snr][
-                    "inference_time"
-                ] += (
-                    batch_inference_time
-                    * (
-                        sample_count
-                        / x.size(0)
-                    )
+                results[snr]["inference_time"] += batch_inference_time * (
+                    sample_count / x.size(0)
                 )
 
             if batch_idx % 500 == 0:
-
-                print(
-                    f"Processed "
-                    f"{batch_idx}/"
-                    f"{len(test_loader)} "
-                    f"batches",
-                    flush=True
-                )
+                print(f"Processed {batch_idx}/{len(test_loader)} batches", flush=True)
 
     # =====================================================
     # Print results
     # =====================================================
 
-    print(
-        "",
-        flush=True
-    )
+    print("", flush=True)
 
-    print(
-        "U-Net SNR-wise Evaluation",
-        flush=True
-    )
+    print("U-Net SNR-wise Evaluation", flush=True)
 
-    print(
-        "-------------------------",
-        flush=True
-    )
+    print("-------------------------", flush=True)
 
-    print(
-        "SNR_dB\tF1\tIoU\tPrecision\tRecall\tTime_ms",
-        flush=True
-    )
+    print("SNR_dB\tF1\tIoU\tPrecision\tRecall\tTime_ms", flush=True)
 
-    for snr in sorted(
-        results.keys()
-    ):
-
+    for snr in sorted(results.keys()):
         r = results[snr]
 
         tp = r["tp"]
         fp = r["fp"]
         fn = r["fn"]
 
-        intersection = (
-            r["intersection"]
-        )
+        intersection = r["intersection"]
 
         union = r["union"]
 
         samples = r["samples"]
 
-        f1 = calculate_f1(
-            tp,
-            fp,
-            fn
-        )
+        f1 = calculate_f1(tp, fp, fn)
 
-        iou = calculate_iou(
-            intersection,
-            union
-        )
+        iou = calculate_iou(intersection, union)
 
-        precision_denom = (
-            tp + fp
-        )
+        precision_denom = tp + fp
 
-        recall_denom = (
-            tp + fn
-        )
+        recall_denom = tp + fn
 
-        precision = (
-            tp / precision_denom
-            if precision_denom > 0
-            else 1.0
-        )
+        precision = tp / precision_denom if precision_denom > 0 else 1.0
 
-        recall = (
-            tp / recall_denom
-            if recall_denom > 0
-            else 1.0
-        )
+        recall = tp / recall_denom if recall_denom > 0 else 1.0
 
-        mean_time_ms = (
-            r["inference_time"]
-            / samples
-            * 1000
-            if samples > 0
-            else 0.0
-        )
+        mean_time_ms = r["inference_time"] / samples * 1000 if samples > 0 else 0.0
 
         print(
             f"{snr:>+3d}\t"
@@ -485,7 +303,7 @@ def evaluate_by_snr():
             f"{precision:.4f}\t"
             f"{recall:.4f}\t"
             f"{mean_time_ms:.4f}",
-            flush=True
+            flush=True,
         )
 
 

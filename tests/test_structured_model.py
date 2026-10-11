@@ -59,7 +59,12 @@ class EvidenceAxialNetTests(unittest.TestCase):
                     self.assertEqual(tuple(evidence.shape[-2:]), shape[-2:])
                     self.assert_finite(evidence)
                     expected_edges = {
-                        "horizontal_edge_weights": (shape[0], 1, shape[2], shape[3] - 1),
+                        "horizontal_edge_weights": (
+                            shape[0],
+                            1,
+                            shape[2],
+                            shape[3] - 1,
+                        ),
                         "vertical_edge_weights": (shape[0], 1, shape[2] - 1, shape[3]),
                     }
                     for name, edge_shape in expected_edges.items():
@@ -96,7 +101,9 @@ class EvidenceAxialNetTests(unittest.TestCase):
         self.assertIsNotNone(refinement_gradient)
         self.assert_finite(refinement_gradient)
         self.assertGreater(float(refinement_gradient.abs().sum()), 0)
-        edge_gradients = [p.grad for p in model.edge_gate.parameters() if p.grad is not None]
+        edge_gradients = [
+            p.grad for p in model.edge_gate.parameters() if p.grad is not None
+        ]
         self.assertTrue(edge_gradients)
         self.assertGreater(sum(float(g.abs().sum()) for g in edge_gradients), 0)
         parameter_gradients = [p.grad for p in model.parameters() if p.grad is not None]
@@ -115,7 +122,8 @@ class EvidenceAxialNetTests(unittest.TestCase):
                     # Padding must not turn an all-busy image into weak evidence
                     # at a frame boundary, including for kernels wider than x.
                     torch.testing.assert_close(
-                        aux["evidence_maps"], torch.full_like(aux["evidence_maps"], value)
+                        aux["evidence_maps"],
+                        torch.full_like(aux["evidence_maps"], value),
                     )
                     for value_tensor in aux.values():
                         if isinstance(value_tensor, torch.Tensor):
@@ -151,7 +159,9 @@ class EvidenceAxialNetTests(unittest.TestCase):
         # sigmoid(-10) is small but substantially above float32 epsilon:
         # normalization must retain gate magnitude, not merely ratios.
         self.assertGreater(float(weak_aux["horizontal_edge_weights"].min()), 1e-6)
-        torch.testing.assert_close(weak_logits, weak_aux["unary_logits"], rtol=0, atol=1e-3)
+        torch.testing.assert_close(
+            weak_logits, weak_aux["unary_logits"], rtol=0, atol=1e-3
+        )
         strong_correction = strong_logits - strong_aux["unary_logits"]
         self.assertTrue(bool((strong_correction > 0.1).all()))
         self.assert_finite(weak_logits)
@@ -179,7 +189,9 @@ class EvidenceAxialNetTests(unittest.TestCase):
         torch.save(model.state_dict(), checkpoint)
         checkpoint.seek(0)
         restored = self.make_model().eval()
-        restored.load_state_dict(torch.load(checkpoint, map_location="cpu", weights_only=True))
+        restored.load_state_dict(
+            torch.load(checkpoint, map_location="cpu", weights_only=True)
+        )
         with torch.no_grad():
             actual = restored(x)
             repeated = restored(x)
@@ -188,8 +200,13 @@ class EvidenceAxialNetTests(unittest.TestCase):
 
     def test_invalid_batch_channel_or_spatial_shapes_are_rejected(self):
         model = self.make_model().eval()
-        invalid_shapes = [(1, 17, 31), (1, 2, 17, 31), (0, 1, 17, 31),
-                          (1, 1, 7, 17), (1, 1, 17, 7)]
+        invalid_shapes = [
+            (1, 17, 31),
+            (1, 2, 17, 31),
+            (0, 1, 17, 31),
+            (1, 1, 7, 17),
+            (1, 1, 17, 7),
+        ]
         for shape in invalid_shapes:
             with self.subTest(shape=shape):
                 with self.assertRaises(ValueError):

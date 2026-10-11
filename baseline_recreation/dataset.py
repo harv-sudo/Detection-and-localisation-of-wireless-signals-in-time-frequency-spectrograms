@@ -54,8 +54,8 @@ class SignalAreaDataset(Dataset):
 
         # Normalise coordinates to [0, 1]
         if self.normalise_boxes and boxes.size > 0:
-            boxes[:, 0] /= width   # x
-            boxes[:, 2] /= width   # w
+            boxes[:, 0] /= width  # x
+            boxes[:, 2] /= width  # w
             boxes[:, 1] /= height  # y
             boxes[:, 3] /= height  # h
 

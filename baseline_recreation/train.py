@@ -44,7 +44,10 @@ def train():
     print("Loading dataset...", flush=True)
     start = time.time()
     dataset = LargeSignalAreaDataset(DATA_DIR)
-    print(f"Dataset loaded: {len(dataset)} samples in {time.time() - start:.2f}s", flush=True)
+    print(
+        f"Dataset loaded: {len(dataset)} samples in {time.time() - start:.2f}s",
+        flush=True,
+    )
 
     n_total = len(dataset)
     n_train = int(TRAIN_SPLIT * n_total)
@@ -57,7 +60,10 @@ def train():
         generator=torch.Generator().manual_seed(SEED),
     )
 
-    print(f"Train: {len(train_ds)} | Val: {len(val_ds)} | Test: {len(test_ds)}", flush=True)
+    print(
+        f"Train: {len(train_ds)} | Val: {len(val_ds)} | Test: {len(test_ds)}",
+        flush=True,
+    )
 
     train_loader = DataLoader(
         train_ds,
@@ -134,7 +140,7 @@ def train():
             f"Epoch [{epoch:03d}/{EPOCHS}] "
             f"Train Loss: {train_loss:.6f} | "
             f"Val Loss: {val_loss:.6f} | "
-            f"Time: {epoch_time/60:.2f} min",
+            f"Time: {epoch_time / 60:.2f} min",
             flush=True,
         )
 

@@ -24,9 +24,7 @@ class UNetSignalDataset(Dataset):
         self.files = sorted(self.root_dir.glob("*.mat"))
 
         if not self.files:
-            raise RuntimeError(
-                f"No chunk .mat files found in {self.root_dir}"
-            )
+            raise RuntimeError(f"No chunk .mat files found in {self.root_dir}")
 
         # Maps a global dataset index to:
         # (chunk_file_index, sample_index_within_chunk)
@@ -35,18 +33,12 @@ class UNetSignalDataset(Dataset):
         print("Indexing dataset...")
 
         for file_idx, path in enumerate(self.files):
-
             with h5py.File(path, "r") as f:
-
                 if "noisy_imgs" not in f:
-                    raise RuntimeError(
-                        f"'noisy_imgs' not found in {path}"
-                    )
+                    raise RuntimeError(f"'noisy_imgs' not found in {path}")
 
                 if "clean_imgs" not in f:
-                    raise RuntimeError(
-                        f"'clean_imgs' not found in {path}"
-                    )
+                    raise RuntimeError(f"'clean_imgs' not found in {path}")
 
                 # MATLAB v7.3/HDF5 dimensions appear reversed
                 # when read using h5py.
@@ -73,7 +65,6 @@ class UNetSignalDataset(Dataset):
         path = self.files[file_idx]
 
         with h5py.File(path, "r") as f:
-
             # -------------------------------------------------
             # Load noisy spectrogram
             # -------------------------------------------------
@@ -81,10 +72,7 @@ class UNetSignalDataset(Dataset):
             noisy = f["noisy_imgs"][:, :, sample_idx]
 
             # MATLAB/HDF5 orientation -> PyTorch orientation
-            noisy = torch.tensor(
-                noisy,
-                dtype=torch.float32
-            ).T
+            noisy = torch.tensor(noisy, dtype=torch.float32).T
 
             # Add channel dimension:
             #
@@ -99,10 +87,7 @@ class UNetSignalDataset(Dataset):
 
             clean = f["clean_imgs"][:, :, sample_idx]
 
-            clean = torch.tensor(
-                clean,
-                dtype=torch.float32
-            ).T
+            clean = torch.tensor(clean, dtype=torch.float32).T
 
             clean = clean.unsqueeze(0)
 
@@ -127,9 +112,6 @@ class UNetSignalDataset(Dataset):
             else:
                 snr = float(snr_dataset[sample_idx])
 
-        snr = torch.tensor(
-            snr,
-            dtype=torch.float32
-        )
+        snr = torch.tensor(snr, dtype=torch.float32)
 
         return noisy, clean, snr

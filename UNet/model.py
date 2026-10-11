@@ -27,7 +27,6 @@ class DoubleConv(nn.Module):
             ),
             nn.BatchNorm2d(out_channels),
             nn.ReLU(inplace=True),
-
             nn.Conv2d(
                 out_channels,
                 out_channels,
@@ -176,9 +175,9 @@ class UNet(nn.Module):
     def forward(self, x):
 
         # Encoder
-        x1 = self.enc1(x)       # 32 channels
-        x2 = self.enc2(x1)      # 64 channels
-        x3 = self.enc3(x2)      # 128 channels
+        x1 = self.enc1(x)  # 32 channels
+        x2 = self.enc2(x1)  # 64 channels
+        x3 = self.enc3(x2)  # 128 channels
 
         # Bottleneck
         x4 = self.bottleneck(x3)  # 256 channels
@@ -197,7 +196,6 @@ class UNet(nn.Module):
 # ---------------------------------------------------------
 
 if __name__ == "__main__":
-
     model = UNet()
 
     # Simulate a batch of 4 spectrograms
@@ -208,10 +206,6 @@ if __name__ == "__main__":
     print("Input shape: ", x.shape)
     print("Output shape:", y.shape)
 
-    parameters = sum(
-        p.numel()
-        for p in model.parameters()
-        if p.requires_grad
-    )
+    parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
     print(f"Trainable parameters: {parameters:,}")
