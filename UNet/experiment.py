@@ -234,6 +234,11 @@ def assess(model, loader, device, thresholds):
 
 
 def train(args):
+    """Train while selecting the checkpoint and threshold by validation macro F1.
+
+    The held-out test split is never read during training. The *same* threshold
+    selected on validation is used to report training metrics for comparison.
+    """
     run_dir = Path(args.run_dir).resolve()
     if run_dir.exists() and any(run_dir.iterdir()):
         raise FileExistsError(
@@ -246,6 +251,8 @@ def train(args):
         split_seed=SPLIT_SEED,
         torch_version=str(torch.__version__),
         loss="BCE + per-image soft Dice",
+        checkpoint_selection="maximum validation macro F1; tie: lowest validation loss",
+        early_stopping_metric="validation macro F1",
         source_sha256=source_fingerprints(),
         dependencies={
             name: importlib.metadata.version(name)
@@ -272,7 +279,7 @@ def train(args):
     splits = {
         name: subset.indices for name, subset in zip(("train", "val", "test"), subsets)
     }
-    # Full splits and the exact effective subset IDs are both retained for smoke caps.
+    # Preserve both full split IDs and optional reduced subsets used for testing.
     splits["used_train"] = limited(splits["train"], args.max_train_samples)
     splits["used_val"] = limited(splits["val"], args.max_eval_samples)
     print("Fingerprinting dataset files...", flush=True)
@@ -282,15 +289,37 @@ def train(args):
     write_json(run_dir / "manifest.json", manifest)
     save_checkpoint(run_dir / "splits.pt", splits)
     split_digest = file_sha256(run_dir / "splits.pt")
+
     train_loader = make_loader(
         dataset, splits["used_train"], config, device, training=True
     )
     val_loader = make_loader(dataset, splits["used_val"], config, device)
     model = make_model(config).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-    best_loss, history = float("inf"), []
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer,
+        mode="max",
+        factor=args.lr_factor,
+        patience=args.lr_patience,
+        threshold=args.min_delta,
+        threshold_mode="abs",
+        min_lr=args.min_lr,
+    )
+
+    # Save the highest validation macro F1, even when a small gain is not large
+    # enough to reset early-stopping patience. The latter uses min_delta.
+    best_f1 = -float("inf")
+    best_val_loss = float("inf")
+    best_epoch = None
+    best_threshold = None
+    significant_f1 = -float("inf")
+    epochs_without_significant_gain = 0
+    history = []
+    stopped_early = False
+
     for epoch in range(1, args.epochs + 1):
         started = time.perf_counter()
+        lr_used = optimizer.param_groups[0]["lr"]
         model.train()
         accumulated_loss = 0.0
         for inputs, targets, _ in train_loader:
@@ -308,6 +337,8 @@ def train(args):
             )
             optimizer.step()
             accumulated_loss += float(loss.detach()) * inputs.size(0)
+
+        # Select the prediction threshold using validation *only*.
         sweep = assess(model, val_loader, device, args.thresholds)
         validation = max(
             sweep,
@@ -317,10 +348,43 @@ def train(args):
                 -result["threshold"],
             ),
         )
+        val_f1 = validation["overall"]["macro"]["f1"]
+        val_loss = validation["loss"]
+
+        # A separate no-grad train-set evaluation ensures train/val metrics
+        # represent the same completed epoch, same metric, same threshold.
+        train_evaluation = assess(
+            model, train_loader, device, [validation["threshold"]]
+        )[0]
+        scheduler.step(val_f1)
+        next_lr = optimizer.param_groups[0]["lr"]
+
+        if val_f1 > significant_f1 + args.min_delta:
+            significant_f1 = val_f1
+            epochs_without_significant_gain = 0
+        else:
+            epochs_without_significant_gain += 1
+
+        # Main objective: best validation macro F1. Use loss only to break ties.
+        is_best = (
+            val_f1 > best_f1
+            or (val_f1 == best_f1 and val_loss < best_val_loss)
+        )
+        if is_best:
+            best_f1, best_val_loss = val_f1, val_loss
+            best_epoch, best_threshold = epoch, validation["threshold"]
+
         row = {
             "epoch": epoch,
             "train_loss": accumulated_loss / len(splits["used_train"]),
+            "train_evaluation": train_evaluation,
             "validation": validation,
+            "training_threshold": validation["threshold"],
+            "learning_rate": lr_used,
+            "next_learning_rate": next_lr,
+            "best_validation_macro_f1": best_f1,
+            "best_epoch": best_epoch,
+            "epochs_without_significant_gain": epochs_without_significant_gain,
             "seconds": time.perf_counter() - started,
             "threshold_sweep": [
                 {
@@ -336,24 +400,64 @@ def train(args):
             "config": config,
             "model_state_dict": model.state_dict(),
             "optimizer_state_dict": optimizer.state_dict(),
+            "scheduler_state_dict": scheduler.state_dict(),
             "validation": validation,
             "threshold": validation["threshold"],
+            "best_validation_macro_f1": best_f1,
+            "best_epoch": best_epoch,
             "manifest_sha256": manifest["sha256"],
             "splits_sha256": split_digest,
             "metric_conventions": METRIC_CONVENTIONS,
             "parameters": sum(parameter.numel() for parameter in model.parameters()),
         }
         save_checkpoint(run_dir / "latest.pt", checkpoint)
-        if validation["loss"] < best_loss:
-            best_loss = validation["loss"]
+        if is_best:
             save_checkpoint(run_dir / "best.pt", checkpoint)
         write_json(run_dir / "history.json", history)
+
         print(
-            f"Epoch {epoch}: train={row['train_loss']:.6f}, val={validation['loss']:.6f}, "
-            f"val macro F1={validation['overall']['macro']['f1']:.4f}, threshold={validation['threshold']:.2f}",
+            f"Epoch {epoch:03d}/{args.epochs} | "
+            f"train loss={row['train_loss']:.6f} | "
+            f"train macro F1={train_evaluation['overall']['macro']['f1']:.4f} | "
+            f"val loss={val_loss:.6f} | val macro F1={val_f1:.4f} | "
+            f"val macro IoU={validation['overall']['macro']['iou']:.4f} | "
+            f"threshold={validation['threshold']:.2f} | "
+            f"LR={lr_used:.2e} | "
+            f"best F1={best_f1:.4f} (epoch {best_epoch}) | "
+            f"patience={epochs_without_significant_gain}/{args.patience}",
             flush=True,
         )
-    print(f"Saved experiment to {run_dir}; test split remains unevaluated.", flush=True)
+        if next_lr != lr_used:
+            print(f"  Learning rate reduced to {next_lr:.2e}", flush=True)
+        if epochs_without_significant_gain >= args.patience:
+            stopped_early = True
+            print(
+                f"Early stopping: validation macro F1 failed to improve "
+                f"by more than {args.min_delta:g} for {args.patience} epochs.",
+                flush=True,
+            )
+            break
+
+    write_json(
+        run_dir / "summary.json",
+        {
+            "best_epoch": best_epoch,
+            "best_validation_macro_f1": best_f1,
+            "best_validation_loss": best_val_loss,
+            "best_threshold": best_threshold,
+            "epochs_completed": len(history),
+            "maximum_epochs": args.epochs,
+            "early_stopped": stopped_early,
+            "criterion": "maximum validation macro F1; ties lowest validation loss",
+            "test_evaluated": False,
+        },
+    )
+    print(
+        f"Best validation macro F1={best_f1:.6f} at epoch {best_epoch}, "
+        f"threshold={best_threshold:.2f}. Saved experiment to {run_dir}; "
+        "test split remains unevaluated.",
+        flush=True,
+    )
 
 
 def evaluate(args):
@@ -503,6 +607,16 @@ def parser():
         if command == "train":
             sub.add_argument("--epochs", type=positive_int, default=8)
             sub.add_argument("--lr", type=float, default=1e-3)
+            sub.add_argument("--patience", type=positive_int, default=20,
+                             help="early stopping epochs without significant validation macro F1 gain")
+            sub.add_argument("--min-delta", type=float, default=0.0005,
+                             help="minimum validation macro F1 increase that resets patience")
+            sub.add_argument("--lr-patience", type=positive_int, default=6,
+                             help="ReduceLROnPlateau patience (validation macro F1)")
+            sub.add_argument("--lr-factor", type=float, default=0.5,
+                             help="multiply learning rate by this on a plateau")
+            sub.add_argument("--min-lr", type=float, default=1e-5,
+                             help="minimum learning rate")
             sub.add_argument("--max-train-samples", type=positive_int)
             sub.add_argument(
                 "--thresholds",
@@ -523,10 +637,18 @@ def main():
     if args.command == "train" and (
         not math.isfinite(args.lr)
         or not args.lr > 0
-        or any(not 0 < threshold < 1 for threshold in args.thresholds)
+        or not math.isfinite(args.min_delta)
+        or args.min_delta < 0
+        or not math.isfinite(args.min_lr)
+        or not 0 <= args.min_lr < args.lr
+        or not math.isfinite(args.lr_factor)
+        or not 0 < args.lr_factor < 1
+        or any(not math.isfinite(t) or not 0 < t < 1 for t in args.thresholds)
     ):
         argument_parser.error(
-            "--lr must be positive and --thresholds must lie strictly between 0 and 1"
+            "require lr > 0, 0 <= min-lr < lr, min-delta >= 0, "
+            "0 < lr-factor < 1, and thresholds strictly between 0 and 1 "
+            "(all values finite)"
         )
     torch.set_num_threads(args.threads)
     {"train": train, "evaluate": evaluate, "smoke": smoke}[args.command](args)
