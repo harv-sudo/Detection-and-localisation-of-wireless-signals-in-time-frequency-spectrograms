@@ -146,3 +146,9 @@ These maps make intermediate computations inspectable, but do not establish fait
 The research hypothesis is that a compact, direction-aware model with inspectable binary-count evidence and bounded neighbour corrections can improve the accuracy/compute trade-off on this task. Establishing a contribution requires matched experiments, component ablations, multiple seeds and measured latency or energy on stated hardware. Parameter and MAC reductions alone do not establish either improved accuracy or deployment speed.
 
 The ingredients have relevant prior art. [Zheng et al., *Conditional Random Fields as Recurrent Neural Networks* (ICCV 2015)](https://arxiv.org/abs/1502.03240) integrate recurrent mean-field CRF inference with segmentation networks. This candidate uses local learned affinities and a finite anchored update rather than reproducing that CRF formulation. [Hou et al., *Strip Pooling: Rethinking Spatial Pooling for Scene Parsing* (CVPR 2020)](https://arxiv.org/abs/2003.13328) study narrow directional pooling for spatial context. The binary-count channels here are task-specific local windows, but directional pooling itself is established. This implementation is a candidate for a model-focused study; it is not a claim of unverified originality.
+# Accuracy-first H100 experiment
+
+For the new F1-focused model, CUDA training, resumption and optional multi-seed
+ensemble commands, see [F1_MODEL.md](F1_MODEL.md). It preserves the existing
+dataset and splits; its accuracy is awaiting the remote training run.
+
