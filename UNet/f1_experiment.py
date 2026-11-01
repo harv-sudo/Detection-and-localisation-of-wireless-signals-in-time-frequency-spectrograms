@@ -53,7 +53,7 @@ def make_model(config):
 def setup_device(name):
     device = base.choose_device(name)
     if device.type == "cuda":
-        torch.cuda.set_device(device)
+        torch.cuda.set_device(device.index if device.index is not None else 0)
     # Use the same FP32 arithmetic settings for validation and test. No TF32.
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False

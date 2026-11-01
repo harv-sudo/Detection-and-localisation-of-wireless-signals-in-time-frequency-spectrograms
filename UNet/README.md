@@ -1,3 +1,6 @@
+For brief explanations of all architectures and the latest standardised results,
+see the [architecture guide](../architecture_guide/README.md).
+
 EvidenceAxialNet is a compact segmentation candidate for the existing binary spectrograms. `structured_model.py` contains the candidate and `experiment.py` compares it with the original U-Net using a common training and evaluation protocol. The original `model.py`, dataset loaders, MATLAB generation code and generated data are unchanged.
 
 For the subsequent CPU/GPU speed experiment, see [FastUNet and deployment commands](FAST_MODEL.md) and [measured results](../review_artifacts/fast_model_results.md). It adds a narrow dense model, branch merging, and optional CPU inference preparation while preserving this baseline and its source fingerprints.

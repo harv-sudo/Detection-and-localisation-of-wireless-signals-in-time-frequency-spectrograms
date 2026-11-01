@@ -1,0 +1,67 @@
+\documentclass[10pt]{article}
+
+\usepackage[margin=1.6cm]{geometry}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+
+\definecolor{headerblue}{HTML}{D9EAF7}
+\definecolor{lightgray}{HTML}{F4F4F4}
+
+\begin{document}
+
+\begin{table}[ht]
+\centering
+\label{tab:snr-f1}
+\small
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{9pt}
+\begin{tabular}{rcccc}
+\toprule
+\rowcolor{headerblue}
+\textbf{SNR (dB)} &
+\textbf{Original U-Net} &
+\textbf{EvidenceAxialNet} &
+\textbf{FastUNet} &
+\textbf{Baseline FCNN} \\
+\midrule
+$-20$ & 0.7805 & 0.7740 & \textbf{0.7809} & 0.6988 \\
+$-19$ & \textbf{0.7873} & 0.7806 & 0.7859 & 0.7048 \\
+$-18$ & 0.7957 & 0.7871 & \textbf{0.7972} & 0.7115 \\
+$-17$ & \textbf{0.8117} & 0.8018 & 0.8111 & 0.7224 \\
+$-16$ & \textbf{0.8283} & 0.8109 & 0.8242 & 0.7373 \\
+$-15$ & \textbf{0.8604} & 0.8427 & 0.8589 & 0.7585 \\
+$-14$ & \textbf{0.8872} & 0.8731 & 0.8841 & 0.7784 \\
+$-13$ & \textbf{0.9139} & 0.9052 & 0.9131 & 0.8055 \\
+$-12$ & \textbf{0.9433} & 0.9376 & 0.9402 & 0.8306 \\
+$-11$ & \textbf{0.9657} & 0.9612 & 0.9623 & 0.8466 \\
+$-10$ & \textbf{0.9813} & 0.9782 & 0.9785 & 0.8552 \\
+$-9$  & \textbf{0.9921} & 0.9910 & 0.9902 & 0.8619 \\
+$-8$  & 0.9976 & \textbf{0.9979} & 0.9964 & 0.8626 \\
+$-7$  & 0.9996 & \textbf{0.9997} & 0.9992 & 0.8627 \\
+$-6$  & 0.9999 & \textbf{1.0000} & 0.9999 & 0.8607 \\
+$-5$  & 1.0000 & \textbf{1.0000} & 1.0000 & 0.8598 \\
+$-4$  & \textbf{1.0000} & \textbf{1.0000} & 1.0000 & 0.8611 \\
+$-3$  & 1.0000 & \textbf{1.0000} & 1.0000 & 0.8598 \\
+$-2$  & \textbf{1.0000} & \textbf{1.0000} & 1.0000 & 0.8606 \\
+$-1$  & \textbf{1.0000} & \textbf{1.0000} & 1.0000 & 0.8605 \\
+$0$   & 1.0000 & \textbf{1.0000} & 1.0000 & 0.8604 \\
+$+1$  & 1.0000 & \textbf{1.0000} & 1.0000 & 0.8609 \\
+$+2$  & \textbf{1.0000} & \textbf{1.0000} & 1.0000 & 0.8597 \\
+$+3$  & 1.0000 & \textbf{1.0000} & 1.0000 & 0.8611 \\
+$+4$  & 1.0000 & \textbf{1.0000} & 1.0000 & 0.8619 \\
+$+5$  & 1.0000 & \textbf{1.0000} & 1.0000 & 0.8592 \\
+\midrule
+\rowcolor{lightgray}
+\textbf{Overall} &
+\textbf{0.9446} &
+0.9407 &
+0.9438 &
+0.8216 \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\end{table}
+
+\end{document}

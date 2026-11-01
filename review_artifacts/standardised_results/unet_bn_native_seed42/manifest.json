@@ -1,0 +1,136 @@
+{
+  "samples": 104000,
+  "files": [
+    {
+      "name": "snr_+00_chunk_001.mat",
+      "bytes": 2374177,
+      "sha256": "c292d9454aabb320100d72f4a93d00004b3350e75e479c8eab4980b8c2f1fe22"
+    },
+    {
+      "name": "snr_+01_chunk_001.mat",
+      "bytes": 2370679,
+      "sha256": "974a3e83babf5fc995849020d538bc71ced3e0f287b3b5cb2d0e926d69423912"
+    },
+    {
+      "name": "snr_+02_chunk_001.mat",
+      "bytes": 2369822,
+      "sha256": "866acbf7682596400aebacfb41984b5a72829e677992f69eadecd8a824701c32"
+    },
+    {
+      "name": "snr_+03_chunk_001.mat",
+      "bytes": 2369633,
+      "sha256": "e3620d2c83d88e35bebc518798ddf3e3c79164c654103a42f24e126d23c09992"
+    },
+    {
+      "name": "snr_+04_chunk_001.mat",
+      "bytes": 2373029,
+      "sha256": "d48d10cfc25ca1fda2e492d6d4c0fb7cecc55baa525ac41cf41dc8050547e0ab"
+    },
+    {
+      "name": "snr_+05_chunk_001.mat",
+      "bytes": 2373639,
+      "sha256": "9dec11fdd2b854b14b8d5a490356f9098b4dc4834f6cad9929326f2b055df9b9"
+    },
+    {
+      "name": "snr_-01_chunk_001.mat",
+      "bytes": 2396555,
+      "sha256": "773b6c9cb89838c6525e5698ab5c0009a963feba1e1f5798d1479853fcdb3b7b"
+    },
+    {
+      "name": "snr_-02_chunk_001.mat",
+      "bytes": 2567445,
+      "sha256": "c7991a60fbc80cd310bed93c42dcdea6c498904bd7831702cc82ef75e3eb3b0e"
+    },
+    {
+      "name": "snr_-03_chunk_001.mat",
+      "bytes": 2981130,
+      "sha256": "da8c23388a437387d61f44c312ee3fd4695b3026ef4d3b7f6b37b5273584756e"
+    },
+    {
+      "name": "snr_-04_chunk_001.mat",
+      "bytes": 3387083,
+      "sha256": "30ea0fac994a8b7dfb5a0ef58a7d55a792996c0483de18678d574ac56fcb5a1f"
+    },
+    {
+      "name": "snr_-05_chunk_001.mat",
+      "bytes": 3607047,
+      "sha256": "3c5fd180ec2696d22cfe75104f171907c1b3bcc8161d3d30ef0a79eec531777f"
+    },
+    {
+      "name": "snr_-06_chunk_001.mat",
+      "bytes": 3624049,
+      "sha256": "c417e180f3c1fcf0d5773691807094003ae2f200a07c7dc8fcb938569e3ba56c"
+    },
+    {
+      "name": "snr_-07_chunk_001.mat",
+      "bytes": 3475532,
+      "sha256": "799149d70257c969c58aa1ef2741e2774faa6b3e843ae895e0d1102f00d21b59"
+    },
+    {
+      "name": "snr_-08_chunk_001.mat",
+      "bytes": 3249283,
+      "sha256": "ed22e03c590d0921e4fda668683aa18775c6720a9648d6b11dd1b66f55898b41"
+    },
+    {
+      "name": "snr_-09_chunk_001.mat",
+      "bytes": 3008453,
+      "sha256": "78e46b9c6b8ccddba745118142c8c4b7bdee0c8bcfc78299331430758b3dcb98"
+    },
+    {
+      "name": "snr_-10_chunk_001.mat",
+      "bytes": 2778180,
+      "sha256": "61b083a8290a3ed14cb37c46e54b7bbb445e84054c460e9ee21d5c40e90b4d6e"
+    },
+    {
+      "name": "snr_-11_chunk_001.mat",
+      "bytes": 2579815,
+      "sha256": "a5135f14bcef18e39e849000c79d1b0a6858cf5aac8a107b2cba2a709e7ec229"
+    },
+    {
+      "name": "snr_-12_chunk_001.mat",
+      "bytes": 2423728,
+      "sha256": "848b2c08b05d8636d7b4a767bfa5123b07cf40e4a044ea99b6b9d693ef7835e6"
+    },
+    {
+      "name": "snr_-13_chunk_001.mat",
+      "bytes": 2312257,
+      "sha256": "37f151d49b7a6d936c473a0c1f701648993fce27460bbb40ccd0d05268c9e45b"
+    },
+    {
+      "name": "snr_-14_chunk_001.mat",
+      "bytes": 2229915,
+      "sha256": "ab80fde14dcc046ee0fa4b419ff3545138bd281831818c7962a71789611b661c"
+    },
+    {
+      "name": "snr_-15_chunk_001.mat",
+      "bytes": 2164516,
+      "sha256": "b1acd57936e9fc1860e133c580f3e2c8b28b817c49117ebb59311a6489ea1e4a"
+    },
+    {
+      "name": "snr_-16_chunk_001.mat",
+      "bytes": 2121873,
+      "sha256": "dffe689ccb48666849790aaea003dfe24ce72edba225d5a0403e9fe8b5aae4a8"
+    },
+    {
+      "name": "snr_-17_chunk_001.mat",
+      "bytes": 2093643,
+      "sha256": "8913770909b833fa302058ee91e045b59f469c0e5c164915143e901496381ad4"
+    },
+    {
+      "name": "snr_-18_chunk_001.mat",
+      "bytes": 2068901,
+      "sha256": "4629de1d8e85bb6579acd87c7f2ed833eab71fdd3d8f68d65d71c259e3726888"
+    },
+    {
+      "name": "snr_-19_chunk_001.mat",
+      "bytes": 2060438,
+      "sha256": "86ffe5c3279d0ce2168ef55b6730212d96930ec3ec75884c4b7b3c09886757fb"
+    },
+    {
+      "name": "snr_-20_chunk_001.mat",
+      "bytes": 2042640,
+      "sha256": "b92d2cc97e795b77c861c62be55c810838c4f7a41f11211819d77fe9d32fa0c0"
+    }
+  ],
+  "sha256": "dfee3561ea86413434f74c76102df7a09836d8bec23a61f9f78dee20fee57c96"
+}

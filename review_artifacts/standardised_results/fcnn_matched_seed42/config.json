@@ -1,0 +1,37 @@
+{
+  "command": "train",
+  "device": "cuda",
+  "threads": 4,
+  "run_dir": "C:\\Users\\Isaac\\Desktop\\Detection-and-localisation-of-wireless-signals-in-time-frequency-spectrograms\\runs\\fcnn_matched_seed42",
+  "batch_size": 64,
+  "data_dir": "C:\\Users\\Isaac\\Desktop\\Detection-and-localisation-of-wireless-signals-in-time-frequency-spectrograms\\UNet\\data",
+  "reference_run": "C:\\Users\\Isaac\\Desktop\\Detection-and-localisation-of-wireless-signals-in-time-frequency-spectrograms\\runs\\unet_bn_native_seed42",
+  "workers": 4,
+  "max_eval_samples": null,
+  "epochs": 8,
+  "lr": 0.001,
+  "seed": 42,
+  "max_train_samples": null,
+  "model": "fcnn",
+  "loss": "MSE on 20 normalized xywh boxes, including padding",
+  "checkpoint_selection": "minimum validation MSE; no scheduler or early stopping",
+  "source_sha256": {
+    "baseline_recreation/matched_experiment.py": "77c65b4588834e3d3dc7d96fc8db1f0f993dec08c2fd2e9e87d63f1ac6fa91fd",
+    "baseline_recreation/model.py": "e3c60b67f53f01896f4e1e422299e646ae7e14bfc141c0858828fcdcf7d43a7a",
+    "UNet/experiment.py": "77b2740bb5d6352021f22d2420120384f618b7ef8fb15271053cd86c54b7eda0"
+  },
+  "torch_version": "2.12.0+rocm7.14.0",
+  "reference_checkpoint_sha256": "2a54b8a9fc08ac1fbd3db27ac5a2efc5ccb93d14335bf1b1d45825bdef9a9c55",
+  "reference_config_sha256": "92800e0b4bcb078988bed6f323e64547e58b3d3b0286705479fcfbbdde8a5589",
+  "reference_splits_sha256": "b2991dcb6e1aa6c4a3d84ad095a9363a2b3cab5ee86422592c1243462eca6513",
+  "reference_settings": {
+    "epochs": 8,
+    "batch_size": 64,
+    "lr": 0.001,
+    "seed": 42
+  },
+  "full_data_run": true,
+  "matches_reference_budget": true,
+  "resolved_device": "cuda",
+  "device_name": "AMD Radeon RX 9070 XT"
+}

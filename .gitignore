@@ -36,3 +36,10 @@ runs/
 # OS clutter
 .DS_Store
 Thumbs.db
+
+# Local document previews and LaTeX build intermediates
+tmp/
+*.aux
+*.log
+*.synctex.gz
+review_artifacts/figure16a_latex/main.pdf

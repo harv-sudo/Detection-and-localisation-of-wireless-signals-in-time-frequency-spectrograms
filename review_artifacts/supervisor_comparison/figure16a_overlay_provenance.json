@@ -1,0 +1,22 @@
+{
+  "source_pdf": "review_artifacts\\reference_signal_area_2023.pdf",
+  "source_page_1based": 12,
+  "crop_pdf_points": [
+    64,
+    56,
+    273,
+    221
+  ],
+  "axis_bounds_pdf_points": {
+    "left": 90.9735,
+    "right": 266.0925,
+    "top": 63.0485,
+    "bottom": 197.0105
+  },
+  "source_figure": "Unaltered colour raster of the original Figure 16a",
+  "local_scores": "Saved macro per-image pixel F1; no offset or smoothing",
+  "markers": "Different symbols staggered across actual SNR positions to limit occlusion",
+  "accuracy_data": "review_artifacts/fast_model_comparison.json",
+  "historical_fcnn_data": "FCNN results.txt",
+  "new_inference_or_training": false
+}

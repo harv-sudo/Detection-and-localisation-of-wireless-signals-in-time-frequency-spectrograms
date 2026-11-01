@@ -1,0 +1,171 @@
+{
+  "device": "cuda",
+  "device_name": "AMD Radeon RX 9070 XT",
+  "torch_version": "2.12.0+rocm7.14.0",
+  "dtype": "float32",
+  "cpu_threads": 4,
+  "batch_size": 64,
+  "input_shape": [
+    64,
+    1,
+    50,
+    100
+  ],
+  "warmup_per_round": 30,
+  "iterations_per_round": 100,
+  "rounds": 3,
+  "trained_weights": true,
+  "run_directories": {
+    "fast": "C:\\Users\\Isaac\\Desktop\\Detection-and-localisation-of-wireless-signals-in-time-frequency-spectrograms\\runs\\fast_unet_b8_seed42",
+    "unet": "C:\\Users\\Isaac\\Desktop\\Detection-and-localisation-of-wireless-signals-in-time-frequency-spectrograms\\runs\\unet_bn_native_seed42",
+    "evidence": "C:\\Users\\Isaac\\Desktop\\Detection-and-localisation-of-wireless-signals-in-time-frequency-spectrograms\\runs\\evidence_axial_seed42",
+    "fcnn": "C:\\Users\\Isaac\\Desktop\\Detection-and-localisation-of-wireless-signals-in-time-frequency-spectrograms\\runs\\fcnn_matched_seed42"
+  },
+  "native_batchnorm_only": true,
+  "records": [
+    {
+      "model": "unet",
+      "parameters": 1926433,
+      "convolution_macs_per_image": 685554176,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 7.9008499888004735
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 7.9533500102115795
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 7.99840000399854
+        }
+      ],
+      "linear_macs_per_image": 0,
+      "counted_macs_per_image": 685554176,
+      "checkpoint_sha256": "2a54b8a9fc08ac1fbd3db27ac5a2efc5ccb93d14335bf1b1d45825bdef9a9c55",
+      "architecture_source_check": "AST identical to hash-verified training snapshot (formatting only)",
+      "median_batch_ms": 7.957400011946447,
+      "p95_batch_ms": 8.056299993768334,
+      "mean_batch_ms": 7.963316666525013,
+      "amortized_mean_ms_per_image": 0.12442682291445332
+    },
+    {
+      "model": "unet_folded",
+      "parameters": 1925025,
+      "convolution_macs_per_image": 685554176,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 7.488549978006631
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 7.516350000514649
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 7.532799994805828
+        }
+      ],
+      "linear_macs_per_image": 0,
+      "counted_macs_per_image": 685554176,
+      "checkpoint_sha256": "2a54b8a9fc08ac1fbd3db27ac5a2efc5ccb93d14335bf1b1d45825bdef9a9c55",
+      "architecture_source_check": "AST identical to hash-verified training snapshot (formatting only)",
+      "median_batch_ms": 7.510449999244884,
+      "p95_batch_ms": 7.607000006828457,
+      "mean_batch_ms": 7.518486333622907,
+      "amortized_mean_ms_per_image": 0.11747634896285793
+    },
+    {
+      "model": "evidence_axial",
+      "parameters": 37347,
+      "convolution_macs_per_image": 38810400,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 9.945099998731166
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 9.819200000492856
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 9.770000004209578
+        }
+      ],
+      "linear_macs_per_image": 0,
+      "counted_macs_per_image": 38810400,
+      "checkpoint_sha256": "8d17a81527757e5b27340b723e083f3465f28d42fcf9fe22ff6e07c3179fa9a4",
+      "architecture_source_check": "AST identical to hash-verified training snapshot (formatting only)",
+      "median_batch_ms": 9.820249993936159,
+      "p95_batch_ms": 9.979599999496713,
+      "mean_batch_ms": 9.849998666516816,
+      "amortized_mean_ms_per_image": 0.15390622916432525
+    },
+    {
+      "model": "fast_unet_b8_deploy",
+      "parameters": 120681,
+      "convolution_macs_per_image": 43147136,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 2.009950010688044
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 1.978550004423596
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 1.980599990929477
+        }
+      ],
+      "linear_macs_per_image": 0,
+      "counted_macs_per_image": 43147136,
+      "checkpoint_sha256": "0f91beb8bcf2326ac9fe9d732ccd746b472f15ae2eda77e44fd4a892ab1ff780",
+      "architecture_source_check": "AST identical to hash-verified training snapshot (formatting only)",
+      "median_batch_ms": 1.9873499986715615,
+      "p95_batch_ms": 2.032599993981421,
+      "mean_batch_ms": 1.9926289998693392,
+      "amortized_mean_ms_per_image": 0.031134828122958425
+    },
+    {
+      "model": "fcnn",
+      "parameters": 1498192,
+      "convolution_macs_per_image": 0,
+      "rounds": [
+        {
+          "round": 1,
+          "median_batch_ms": 0.7084500102791935
+        },
+        {
+          "round": 2,
+          "median_batch_ms": 0.6947999936528504
+        },
+        {
+          "round": 3,
+          "median_batch_ms": 0.6962500046938658
+        }
+      ],
+      "linear_macs_per_image": 1497088,
+      "counted_macs_per_image": 1497088,
+      "checkpoint_sha256": "5743033ace07d711c6819e8620e689d5cd90549a3d241f02d0a40802e6e8eaa0",
+      "architecture_source_check": "exact hash",
+      "median_batch_ms": 0.6991999980527908,
+      "p95_batch_ms": 0.756800000090152,
+      "mean_batch_ms": 0.7098983330070041,
+      "amortized_mean_ms_per_image": 0.01109216145323444
+    }
+  ],
+  "memory_format": "contiguous",
+  "optimize_cpu": false,
+  "limitations": [
+    "Synchronized host-wall model forward; excludes loading, transfers and decoding.",
+    "Same FP32 policy; CPU inference graph optimization only when requested, for every model.",
+    "Convolution MACs exclude other operations and memory traffic.",
+    "Counted MACs include convolution and linear layers, not other operations. FCNN returns boxes; segmentation models return masks. Decoding excluded."
+  ],
+  "source_verification": "Checkpoint architecture source hashes verified; training-runner changes are permitted for this inference-only benchmark."
+}

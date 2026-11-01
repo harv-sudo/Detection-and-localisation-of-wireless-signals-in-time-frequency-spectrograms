@@ -13,7 +13,7 @@ import math
 from pathlib import Path
 import random
 import time
-
+import sys
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, Subset, random_split
@@ -651,6 +651,9 @@ def main():
             "(all values finite)"
         )
     torch.set_num_threads(args.threads)
+    if sys.platform == "win32" and torch.version.hip is not None:
+        torch.backends.cudnn.enabled = False
+        print("Windows ROCm: native BatchNorm enabled.", flush=True)
     {"train": train, "evaluate": evaluate, "smoke": smoke}[args.command](args)
 
 
